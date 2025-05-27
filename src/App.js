@@ -45,7 +45,7 @@ function App() {
       <Routes>
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/" element={<SignUpPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
           {/* <Route path="/login" element={<LoginPage />} /> */}
         </Route>
 
@@ -54,7 +54,7 @@ function App() {
         </Route>
         
         <Route element={<GeneralPageLayout />}>
-          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/" element={<ProfilePage />} />
           <Route path="/profile/edit" element={<EditProfilePage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
