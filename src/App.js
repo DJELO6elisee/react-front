@@ -46,11 +46,11 @@ function App() {
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/" element={<LoginPage />} />
+          <Route path="/chat" element={<LoginPage />} />
         </Route>
 
         <Route element={<MainChatLayout />}>
-          <Route path="/chat" element={<ChatPage />} />
+          <Route path="/" element={<ChatPage />} />
         </Route>
         
         <Route element={<GeneralPageLayout />}>
