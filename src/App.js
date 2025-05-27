@@ -52,12 +52,12 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignUpPage />} />
             {/* Redirection par défaut vers login si aucune autre route ne correspond au début */}
-            <Route path="/" element={<LoginPage />} /> 
+            <Route path="/chat" element={<LoginPage />} /> 
           </Route>
 
           {/* Page de Chat avec son layout spécifique */}
           <Route element={<MainChatLayout />}>
-            <Route path="/chat" element={<ChatPage />} />
+            <Route path="/" element={<ChatPage />} />
           </Route>
           
           {/* Pages de Profil et autres pages générales avec Navbar */}
