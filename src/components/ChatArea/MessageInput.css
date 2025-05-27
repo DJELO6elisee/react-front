@@ -1,0 +1,6 @@
+.message-input-form { display: flex; align-items: center; padding: 15px 25px; border-top: 1px solid var(--border-color); background-color: var(--input-area-bg); }
+.message-input-field { flex-grow: 1; border: none; padding: 12px 15px; border-radius: 20px; background-color: var(--input-bg); color: var(--text-color-primary); font-size: 0.95rem; margin: 0 10px; }
+.message-input-field:focus { outline: none; box-shadow: 0 0 0 2px var(--primary-color-transparent); }
+.input-action-btn, .send-btn { background: none; border: none; color: var(--icon-color- Muted); cursor: pointer; padding: 8px; transition: color 0.2s ease; }
+.input-action-btn:hover, .send-btn:hover { color: var(--primary-color); }
+.send-btn { color: var(--primary-color); } /* Envoyer est plus proéminent */

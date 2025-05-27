@@ -1,0 +1,23 @@
+.sidebar-right {
+  width: 300px; /* Ajustez selon vos préférences */
+  background-color: var(--sidebar-bg); /* Peut être le même que sidebar-left ou légèrement différent */
+  border-left: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow-y: auto;
+}
+.sidebar-right.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+  color: var(--text-color-secondary);
+  font-style: italic;
+}
+/* Scrollbar customisée (similaire à sidebar-left) */
+.sidebar-right::-webkit-scrollbar { width: 6px; }
+.sidebar-right::-webkit-scrollbar-track { background: transparent; }
+.sidebar-right::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb-color); border-radius: 3px; }
+.sidebar-right::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover-color); }

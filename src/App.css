@@ -1,0 +1,90 @@
+/* src/App.css */
+:root {
+  --primary-color: #3B82F6; /* Bleu Tailwind 500 */
+  --primary-color-light: #DBEAFE; /* Bleu Tailwind 100 */
+  --primary-color-lighter: #EFF6FF; /* Bleu Tailwind 50 */
+  --primary-color-transparent: rgba(59, 130, 246, 0.2);
+
+
+  --accent-color: #EF4444; /* Rouge Tailwind 500 pour les badges non lus */
+
+  --sidebar-bg: #FFFFFF;
+  --sidebar-header-bg: #F9FAFB; /* Légèrement différent pour le profil utilisateur */
+  --chat-area-bg: #F3F4F6; /* Fond de la liste des messages */
+  --chat-area-bg-main: #FFFFFF; /* Fond global de la zone de chat, en dehors de la liste */
+  --header-bg: #FFFFFF;
+  --input-area-bg: #FFFFFF;
+  --input-bg: #F3F4F6; /* Fond du champ de saisie lui-même */
+  --message-other-bg: #E5E7EB; /* Gris Tailwind 200 */
+
+  --text-color-primary: #1F2937; /* Gris Tailwind 800 */
+  --text-color-secondary: #6B7280; /* Gris Tailwind 500 */
+  --text-color-nav: #4B5563; /* Gris Tailwind 600 pour la nav sidebar */
+  --text-color-timestamp: #9CA3AF; /* Gris Tailwind 400 */
+
+  --icon-color: #6B7280;
+  --icon-color-muted: #9CA3AF;
+
+  --border-color: #D1D5DB; /* Gris Tailwind 300 */
+  --border-color-light: #E5E7EB; /* Gris Tailwind 200 */
+
+  --hover-bg-light: #F3F4F6; /* Gris Tailwind 100 pour les survols */
+  
+  --scrollbar-thumb-color: #CBD5E1; /* Gris Tailwind 300 */
+  --scrollbar-thumb-hover-color: #9CA3AF; /* Gris Tailwind 400 */
+
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  --border-radius-xl: 18px; /* Pour les bulles de message */
+
+  --font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family-sans);
+  background-color: #E5E7EB; /* Un fond global pour la page si l'app ne prend pas tout l'écran */
+  color: var(--text-color-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden; /* Empêche le scroll de la page body elle-même */
+}
+
+.app-layout {
+  display: flex;
+  height: 100vh;
+  max-height: 100vh; /* Pour s'assurer qu'elle ne dépasse pas */
+  background-color: white; /* Fond de l'application principale */
+  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); /* Ombre globale optionnelle */
+  
+}
+
+/* Styles globaux pour les boutons (si vous n'avez pas de composant Button.js) */
+button {
+  font-family: var(--font-family-sans);
+  cursor: pointer;
+}
+
+input, textarea, select {
+  font-family: var(--font-family-sans);
+}
+
+.app-layout {
+  display: flex;
+  height: 100vh;
+  max-height: 100vh;
+  background-color: white;
+}
+
+/* Pour cacher la scrollbar par défaut si des scrollbars customisées sont utilisées ailleurs */
+/* html {
+  overflow-y: scroll; 
+}
+body::-webkit-scrollbar { 
+  display: none; 
+}
+body {
+  -ms-overflow-style: none;
+  scrollbar-width: none; 
+} */

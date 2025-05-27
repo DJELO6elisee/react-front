@@ -1,0 +1,30 @@
+.chat-about-panel { padding: 20px; border-bottom: 1px solid var(--border-color-light); }
+.about-title { font-size: 1.25rem; font-weight: 700; margin-top: 0; margin-bottom: 8px; color: var(--text-color-primary); }
+.room-description { font-size: 0.9rem; color: var(--text-color-secondary); margin-bottom: 20px; line-height: 1.5; }
+
+.participants-section { margin-bottom: 20px; }
+.participants-avatars { display: flex; align-items: center; gap: -10px; /* Superposition des avatars */ }
+.participants-avatars .avatar-image { border: 2px solid white; /* Pour la superposition */ }
+.avatar-more {
+  width: 32px; height: 32px; border-radius: 50%; background-color: var(--primary-color-light); color: var(--primary-color);
+  display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 600;
+  border: 2px solid white; cursor: pointer;
+}
+.add-participant-btn {
+  background: none; border: none; color: var(--primary-color); cursor: pointer; margin-left: 5px; /* Ajustez si superposition */
+  display: flex; align-items: center; justify-content: center; width: 32px; height: 32px;
+}
+.add-participant-btn svg { stroke-width: 2; }
+
+.notification-settings { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: var(--text-color-primary); }
+.notification-settings svg { color: var(--icon-color); }
+
+/* Simple Toggle Switch CSS (à améliorer si besoin) */
+.switch { position: relative; display: inline-block; width: 38px; height: 20px; margin-left: auto; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; }
+.slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; }
+input:checked + .slider { background-color: var(--primary-color); }
+input:checked + .slider:before { transform: translateX(18px); }
+.slider.round { border-radius: 20px; }
+.slider.round:before { border-radius: 50%; }

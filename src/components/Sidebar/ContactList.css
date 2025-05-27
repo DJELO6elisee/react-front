@@ -1,0 +1,8 @@
+.contact-list-container { padding: 15px 0; border-top: 1px solid var(--border-color-light); }
+/* .list-title est déjà défini */
+.contact-list { list-style: none; padding: 0; margin: 0; }
+.contact-item { display: flex; align-items: center; padding: 8px 20px; cursor: pointer; transition: background-color 0.2s ease; color: var(--text-color-nav); }
+.contact-item:hover { background-color: var(--hover-bg-light); }
+.contact-name { margin-left: 12px; flex-grow: 1; }
+.add-contact-btn { display: block; width: calc(100% - 40px); margin: 15px 20px 0; padding: 10px; background-color: transparent; border: 1px dashed var(--border-color); color: var(--text-color-secondary); border-radius: var(--border-radius-md); cursor: pointer; text-align: center; font-weight: 500; }
+.add-contact-btn:hover { background-color: var(--hover-bg-light); border-color: var(--text-color-secondary); }

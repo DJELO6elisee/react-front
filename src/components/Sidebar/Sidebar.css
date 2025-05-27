@@ -1,0 +1,14 @@
+.sidebar-left {
+  width: 280px;
+  background-color: var(--sidebar-bg);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow-y: auto;
+}
+/* Scrollbar customisée (optionnel mais élégant) */
+.sidebar-left::-webkit-scrollbar { width: 6px; }
+.sidebar-left::-webkit-scrollbar-track { background: transparent; }
+.sidebar-left::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb-color); border-radius: 3px; }
+.sidebar-left::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover-color); }

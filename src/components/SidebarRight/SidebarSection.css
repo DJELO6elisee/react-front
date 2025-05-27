@@ -1,0 +1,19 @@
+.sidebar-section {
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--border-color-light);
+}
+.sidebar-section:last-child {
+  border-bottom: none;
+}
+.section-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-color-secondary);
+  margin-bottom: 12px;
+  margin-top: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.section-content {
+  /* Styles pour le contenu si besoin */
+}

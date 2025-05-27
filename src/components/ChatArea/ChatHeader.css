@@ -1,0 +1,10 @@
+.chat-header { display: flex; align-items: center; padding: 15px 25px; border-bottom: 1px solid var(--border-color); background-color: var(--header-bg); height: 40px; /* Hauteur fixe pour aligner avec UserProfile */ }
+.chat-header .back-btn { background: none; border: none; color: var(--icon-color); cursor: pointer; margin-right: 15px; }
+.chat-header .room-info { flex-grow: 1; }
+.chat-header .room-title { font-size: 1.2rem; font-weight: 600; margin: 0; color: var(--text-color-primary); }
+.chat-header .room-members { font-size: 0.85rem; color: var(--text-color-secondary); display: flex; align-items: center; gap: 4px; }
+.chat-header .header-actions { display: flex; gap: 10px; }
+.chat-header .action-btn { background: none; border: none; color: var(--icon-color); cursor: pointer; padding: 5px; }
+.chat-header .action-btn:hover { color: var(--primary-color); }
+.mobile-only { display: none; } /* Sera affiché via media query pour mobile */
+@media (max-width: 768px) { .mobile-only { display: inline-block; } }

@@ -1,0 +1,6 @@
+.user-profile { display: flex; align-items: center; padding: 15px 20px; border-bottom: 1px solid var(--border-color-light); background-color: var(--sidebar-header-bg); }
+.user-profile .user-info { margin-left: 12px; flex-grow: 1; }
+.user-profile .user-name { font-weight: 600; color: var(--text-color-primary); display: flex; align-items: center; gap: 4px; cursor: pointer;}
+.user-profile .user-status { font-size: 0.8rem; color: var(--text-color-secondary); }
+.user-profile .settings-btn { background: none; border: none; color: var(--icon-color); cursor: pointer; padding: 5px; }
+.user-profile .settings-btn:hover { color: var(--primary-color); }

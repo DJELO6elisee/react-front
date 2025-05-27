@@ -1,0 +1,11 @@
+.shared-files-list { list-style: none; padding: 0; margin: 0; }
+.shared-file-item { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border-color-light); }
+.shared-file-item:last-child { border-bottom: none; }
+.file-icon { font-size: 1.5rem; color: var(--primary-color); margin-right: 12px; flex-shrink: 0; }
+.file-info { flex-grow: 1; overflow: hidden; /* Pour l'ellipse sur le nom */ }
+.file-name { display: block; font-weight: 500; color: var(--text-color-primary); text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.file-name:hover { color: var(--primary-color); text-decoration: underline; }
+.file-source { font-size: 0.8rem; color: var(--text-color-secondary); }
+.file-action-btn { background: none; border: none; color: var(--icon-color-muted); cursor: pointer; padding: 5px; margin-left: 10px; }
+.file-action-btn:hover { color: var(--primary-color); }
+/* empty-section-text et see-all-link sont déjà définis */
