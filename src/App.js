@@ -54,8 +54,8 @@ function App() {
         </Route>
         
         <Route element={<GeneralPageLayout />}>
-          <Route path="/" element={<ProfilePage />} />
-          <Route path="/profile/edit" element={<EditProfilePage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/" element={<EditProfilePage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
