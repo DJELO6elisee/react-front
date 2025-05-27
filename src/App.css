@@ -5,21 +5,20 @@
   --primary-color-lighter: #EFF6FF; /* Bleu Tailwind 50 */
   --primary-color-transparent: rgba(59, 130, 246, 0.2);
 
-
   --accent-color: #EF4444; /* Rouge Tailwind 500 pour les badges non lus */
 
   --sidebar-bg: #FFFFFF;
   --sidebar-header-bg: #F9FAFB; /* Légèrement différent pour le profil utilisateur */
   --chat-area-bg: #F3F4F6; /* Fond de la liste des messages */
   --chat-area-bg-main: #FFFFFF; /* Fond global de la zone de chat, en dehors de la liste */
-  --header-bg: #FFFFFF;
+  --header-bg: #FFFFFF; /* Utilisé par ChatHeader et potentiellement Navbar */
   --input-area-bg: #FFFFFF;
   --input-bg: #F3F4F6; /* Fond du champ de saisie lui-même */
   --message-other-bg: #E5E7EB; /* Gris Tailwind 200 */
 
   --text-color-primary: #1F2937; /* Gris Tailwind 800 */
   --text-color-secondary: #6B7280; /* Gris Tailwind 500 */
-  --text-color-nav: #4B5563; /* Gris Tailwind 600 pour la nav sidebar */
+  --text-color-nav: #4B5563; /* Gris Tailwind 600 pour la nav sidebar et Navbar */
   --text-color-timestamp: #9CA3AF; /* Gris Tailwind 400 */
 
   --icon-color: #6B7280;
@@ -39,28 +38,62 @@
   --border-radius-xl: 18px; /* Pour les bulles de message */
 
   --font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
+  /* NOUVELLE VARIABLE POUR LA HAUTEUR DE LA NAVBAR */
+  --navbar-height: 60px; 
 }
 
 body {
   margin: 0;
   font-family: var(--font-family-sans);
-  background-color: #E5E7EB; /* Un fond global pour la page si l'app ne prend pas tout l'écran */
+  background-color: #E5E7EB; /* Fond global de la page si l'app ne prend pas tout l'écran */
   color: var(--text-color-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow: hidden; /* Empêche le scroll de la page body elle-même */
+  /* overflow: hidden;  A ENLEVER d'ici, on veut que la page puisse scroller si le contenu est grand */
 }
 
+/* NOUVEAU: Conteneur global de l'application (Navbar + Contenu principal) */
+/* Ce style s'appliquera au div parent qui contient Navbar et page-content-below-navbar dans App.js */
+.app-container {
+  display: flex;
+  flex-direction: column; /* Navbar en haut, contenu en dessous */
+  height: 100vh; /* Prend toute la hauteur de la fenêtre */
+  max-height: 100vh;
+  overflow: hidden; /* Empêche les barres de défilement sur ce conteneur global si le contenu interne est bien géré */
+}
+
+/* NOUVEAU: Conteneur pour TOUT le contenu SOUS la Navbar */
+.page-content-below-navbar {
+  flex-grow: 1; /* Prend tout l'espace vertical restant */
+  overflow-y: auto; /* Permet le scroll pour le contenu de la page si elle est plus grande que l'espace dispo */
+  display: flex; /* Pour que .app-layout (chat) ou .simple-content-page puisse prendre 100% de hauteur */
+  flex-direction: column; /* Au cas où le contenu interne a besoin de se stacker */
+}
+
+/* Layout spécifique du CHAT (Sidebar, ChatArea, SidebarRight) */
+/* Ce .app-layout est celui qui est à l'intérieur de .page-content-below-navbar pour ChatPage */
 .app-layout {
   display: flex;
-  height: 100vh;
-  max-height: 100vh; /* Pour s'assurer qu'elle ne dépasse pas */
-  background-color: white; /* Fond de l'application principale */
-  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); /* Ombre globale optionnelle */
-  
+  flex-grow: 1; /* Prend toute la hauteur de son parent (.page-content-below-navbar) */
+  /* height: 100vh;  Non, car la hauteur est héritée et gérée par flex-grow */
+  /* max-height: 100vh; Non plus */
+  background-color: white; /* Fond de l'application principale (zone de chat) */
+  /* box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); */ /* Peut-être pas nécessaire ici si .app-container l'a déjà */
+  /* margin-top: 100px; A ENLEVER, la Navbar est gérée séparément */
 }
 
-/* Styles globaux pour les boutons (si vous n'avez pas de composant Button.js) */
+/* NOUVEAU: Styles pour les pages de contenu simple (Profil, EditProfil, 404 etc.) */
+.simple-content-page {
+  padding: 25px 30px; /* Un padding général pour ces pages */
+  width: 100%;
+  box-sizing: border-box;
+  flex-grow: 1; /* Pour qu'il remplisse l'espace dans page-content-below-navbar */
+  /* overflow-y: auto;  Normalement géré par page-content-below-navbar, mais peut être utile si le contenu interne est spécifique */
+}
+
+
+/* Styles globaux pour les boutons */
 button {
   font-family: var(--font-family-sans);
   cursor: pointer;
@@ -70,21 +103,34 @@ input, textarea, select {
   font-family: var(--font-family-sans);
 }
 
-.app-layout {
-  display: flex;
-  height: 100vh;
-  max-height: 100vh;
-  background-color: white;
+/* Assurez-vous que les composants internes du chat gèrent leur propre scroll
+   et que leur hauteur est déterminée par flexbox et non par des hauteurs fixes.
+*/
+.sidebar-left,
+.sidebar-right {
+  /* height: 100%;  A ENLEVER - la hauteur vient du conteneur flex .app-layout */
+  overflow-y: auto;
+  /* ... autres styles ... */
 }
 
-/* Pour cacher la scrollbar par défaut si des scrollbars customisées sont utilisées ailleurs */
-/* html {
-  overflow-y: scroll; 
+.chat-area {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  /* height: 100%; A ENLEVER */
+  overflow: hidden; /* ChatArea ne scrolle pas, c'est MessageList qui scrolle */
 }
-body::-webkit-scrollbar { 
-  display: none; 
+
+.message-list {
+  flex-grow: 1;
+  overflow-y: auto;
+  /* ... autres styles ... */
 }
-body {
-  -ms-overflow-style: none;
-  scrollbar-width: none; 
-} */
+
+/* Si vous avez un .profile-page-container, assurez-vous qu'il ne rentre pas en conflit */
+.profile-page-container {
+  width: 100%; /* Pour qu'il prenne la largeur de .simple-content-page */
+  max-width: 700px; /* Exemple de largeur max pour le contenu du profil */
+  margin: 0 auto; /* Centrer la carte de profil */
+  padding: 20px 0; /* Un peu d'espace vertical */
+}

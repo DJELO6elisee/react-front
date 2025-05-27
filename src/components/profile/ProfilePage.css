@@ -1,0 +1,55 @@
+/* src/components/profile/ProfilePage.css */
+.profile-page-container { /* Pour centrer la carte de profil sur la page */
+  display: flex;
+  justify-content: center;
+  padding: 30px 20px;
+  background-color: var(--chat-area-bg, #F3F4F6); /* Fond de page neutre */
+  min-height: calc(100vh - 60px); /* Moins la hauteur du Navbar si vous en avez un */
+}
+
+.profile-card {
+  background-color: white;
+  padding: 30px;
+  border-radius: var(--border-radius-lg, 12px);
+  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+  width: 100%;
+  max-width: 600px;
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-color-light);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.profile-header .avatar-image { margin-bottom: 15px; }
+.profile-header h2 { font-size: 1.8rem; font-weight: 700; margin: 10px 0 5px; color: var(--text-color-primary); }
+.profile-email { font-size: 0.95rem; color: var(--text-color-secondary); margin-bottom: 15px; display: flex; align-items: center; gap: 6px; }
+
+.profile-details { display: grid; gap: 20px; }
+.profile-detail-item {
+  display: flex; align-items: flex-start; /* Aligne l'icône avec le haut du texte */
+  gap: 12px;
+  font-size: 0.95rem;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-color-light);
+}
+.profile-detail-item:last-child { border-bottom: none; }
+.profile-detail-item .detail-icon { color: var(--primary-color); font-size: 1.2rem; margin-top: 2px; flex-shrink: 0; }
+.profile-detail-item strong { font-weight: 600; color: var(--text-color-primary); display: inline-block; min-width: 150px; /* Pour l'alignement */ }
+
+.profile-edit-form .form-group { margin-bottom: 18px; }
+
+.form-success-message { /* Similaire à form-error-message mais en vert */
+  background-color: rgba(74, 222, 128, 0.1); /* Vert Tailwind 400 avec opacité */
+  color: var(--success-color, #22C55E); /* Vert Tailwind 500 */
+  padding: 10px 15px;
+  border-radius: var(--border-radius-md);
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  text-align: center;
+}

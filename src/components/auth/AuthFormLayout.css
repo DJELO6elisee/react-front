@@ -1,0 +1,61 @@
+/* src/components/auth/AuthFormLayout.css */
+.auth-page-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: var(--chat-area-bg, #F3F4F6); /* Un fond neutre */
+  padding: 20px;
+}
+
+.auth-card {
+  background-color: white;
+  padding: 30px 40px;
+  border-radius: var(--border-radius-lg, 12px);
+  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+}
+
+.auth-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.auth-logo-icon {
+  color: var(--primary-color);
+}
+
+.auth-app-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin: 0;
+}
+
+.auth-form-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-color-primary);
+  margin-bottom: 25px;
+}
+
+.auth-footer-text {
+  margin-top: 25px;
+  font-size: 0.9rem;
+  color: var(--text-color-secondary);
+}
+
+.auth-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
+}

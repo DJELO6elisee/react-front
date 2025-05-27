@@ -1,0 +1,73 @@
+/* src/components/auth/AuthForms.css */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 5px; /* Espacement vertical par défaut entre les champs */
+  text-align: left;
+}
+
+.auth-form .form-group {
+  margin-bottom: 15px; /* Marge par défaut pour petits écrans */
+}
+
+.form-error-message {
+  background-color: rgba(239, 68, 68, 0.1); /* --danger-color avec opacité */
+  color: var(--danger-color, #EF4444);
+  padding: 10px 15px;
+  border-radius: var(--border-radius-md);
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  text-align: center;
+}
+
+.form-options {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.auth-link.small-link {
+  font-size: 0.85rem;
+}
+
+.form-section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-color-secondary);
+  margin-top: 25px;
+  margin-bottom: 15px;
+  text-align: center;
+  border-bottom: 1px solid var(--border-color-light);
+  padding-bottom: 10px;
+}
+
+/* Media Query pour les grands écrans */
+@media (min-width: 768px) { /* Vous pouvez ajuster ce breakpoint */
+  .signup-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Deux colonnes de largeur égale */
+    gap: 15px 20px; /* Espacement vertical et horizontal */
+    align-items: start; /* Aligne les éléments au début de leur cellule */
+  }
+
+  /* Tous les .form-group (qui wrappent InputField et SelectField)
+     prendront une colonne par défaut dans la grille de 2 colonnes.
+     On enlève la marge inférieure car la grille gère l'espacement. */
+  .signup-form-grid .form-group {
+    margin-bottom: 0;
+  }
+
+  /* Faire en sorte que SEULEMENT les éléments marqués avec .full-width-grid-item
+     (comme le titre de section et le conteneur du bouton) prennent les deux colonnes.
+     Aussi, le message d'erreur s'il est un enfant direct. */
+  .signup-form-grid .full-width-grid-item,
+  .signup-form-grid > .form-error-message { /* Si l'erreur est un enfant direct du form */
+    grid-column: 1 / -1; /* S'étend de la première à la dernière ligne de colonne */
+  }
+  
+  /* Assurez-vous que le titre de section a bien .full-width-grid-item dans le JSX si vous voulez
+     qu'il prenne toute la largeur. Idem pour le bouton.
+     Dans le JSX précédent, .form-section-title et le div du bouton avaient déjà cette classe.
+  */
+}
