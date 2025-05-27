@@ -1,7 +1,7 @@
 // src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext';
+import { AuthProvider } from './contexts/AuthContext'; // AuthProvider est toujours utile pour gérer currentUser
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
 import ChatPage from './pages/ChatPage';
@@ -9,72 +9,64 @@ import ProfilePage from './pages/ProfilePage';
 import EditProfilePage from './pages/EditProfilePage';
 import NotFoundPage from './pages/NotFoundPage';
 import Navbar from './components/layout/Navbar';
-import ProtectedRoute from './components/layout/ProtectedRoute';
-import './App.css'; // Styles globaux, y compris .app-container et .page-content-below-navbar
+// import ProtectedRoute from './components/layout/ProtectedRoute'; // SUPPRIMÉ
+import './App.css';
 
-// Layout pour les pages qui ont la Navbar et le layout spécifique du chat
+// Layout pour les pages de chat (Navbar + layout chat spécifique)
 const MainChatLayout = () => (
-  <div className="app-container"> {/* Conteneur global pour Navbar + contenu */}
+  <div className="app-container">
     <Navbar />
-    <div className="page-content-below-navbar"> {/* Conteneur pour le contenu SOUS la navbar */}
-      <div className="app-layout"> {/* C'est le layout du chat (sidebar, chatarea, sidebarRight) */}
+    <div className="page-content-below-navbar">
+      <div className="app-layout"> {/* Layout spécifique du chat */}
         <Outlet /> {/* ChatPage sera rendu ici */}
       </div>
     </div>
   </div>
 );
 
-// Layout pour les pages protégées qui ont juste la Navbar et un contenu simple
-const ProtectedContentLayout = () => (
+// Layout pour les pages de contenu général (Navbar + contenu simple)
+const GeneralPageLayout = () => (
   <div className="app-container">
     <Navbar />
-    <div className="page-content-below-navbar simple-content-page"> {/* Classe pour un padding général */}
-      <Outlet /> {/* ProfilePage, EditProfilePage */}
+    <div className="page-content-below-navbar">
+      <div className="simple-content-page"> {/* Classe pour padding/styles des pages simples */}
+        <Outlet /> {/* ProfilePage, EditProfilePage, NotFoundPage */}
+      </div>
     </div>
   </div>
 );
 
-// Layout pour les pages publiques (pas de Navbar globale ici, gérée par la page elle-même si besoin)
-const PublicLayout = () => (
-    <Outlet />
+// Layout pour les pages d'authentification (plein écran, pas de Navbar globale)
+const AuthLayout = () => (
+    <Outlet /> // LoginPage, SignUpPage seront rendues ici
 );
 
 
 function App() {
   return (
-    <AuthProvider>
+    <AuthProvider> {/* Garder AuthProvider pour gérer l'état de l'utilisateur connecté */}
       <Router>
         <Routes>
-          {/* Routes Publiques */}
-          <Route element={<PublicLayout />}>
+          {/* Pages d'authentification avec leur propre layout */}
+          <Route element={<AuthLayout />}>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignUpPage />} />
-            <Route path="/" element={<LoginPage />} />
-            <Route path="/chat" element={<ChatPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/profile/edit" element={<EditProfilePage />} />
+            {/* Redirection par défaut vers login si aucune autre route ne correspond au début */}
+            <Route path="/" element={<LoginPage />} /> 
           </Route>
 
-          {/* Routes Protégées avec le layout de chat */}
-          <Route element={<ProtectedRoute><MainChatLayout /></ProtectedRoute>}>
+          {/* Page de Chat avec son layout spécifique */}
+          <Route element={<MainChatLayout />}>
             <Route path="/chat" element={<ChatPage />} />
           </Route>
           
-          {/* Routes Protégées avec un layout de contenu simple */}
-          <Route element={<ProtectedRoute><ProtectedContentLayout /></ProtectedRoute>}>
+          {/* Pages de Profil et autres pages générales avec Navbar */}
+          <Route element={<GeneralPageLayout />}>
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/profile/edit" element={<EditProfilePage />} />
+            {/* La page 404 peut aussi utiliser ce layout général */}
+            <Route path="*" element={<NotFoundPage />} /> 
           </Route>
-
-          {/* Page 404 - Pourrait aussi avoir un layout spécifique ou utiliser ProtectedContentLayout */}
-          <Route path="*" element={
-            <div className="app-container">
-                <Navbar /> {/* Assumant que Navbar est visible même sur 404 si l'user est loggé */}
-                <div className="page-content-below-navbar simple-content-page">
-                    <NotFoundPage />
-                </div>
-            </div>
-          } />
         </Routes>
       </Router>
     </AuthProvider>
