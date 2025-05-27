@@ -51,11 +51,12 @@ function App() {
 
         <Route element={<MainChatLayout />}>
           <Route path="/chat" element={<ChatPage />} />
+          <Route path="/" element={<ChatPage />} />
         </Route>
         
         <Route element={<GeneralPageLayout />}>
           <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/" element={<EditProfilePage />} />
+          <Route path="/profile/edit" element={<EditProfilePage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
