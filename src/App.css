@@ -1,136 +1,241 @@
 /* src/App.css */
 :root {
+  /* Couleurs Primaires & Accents */
   --primary-color: #3B82F6; /* Bleu Tailwind 500 */
-  --primary-color-light: #DBEAFE; /* Bleu Tailwind 100 */
+  --primary-color-dark: #2563EB; /* Bleu Tailwind 600 (pour survol) */
+  --primary-color-light: #93C5FD; /* Bleu Tailwind 300 (pour bulles messages 'own') */
   --primary-color-lighter: #EFF6FF; /* Bleu Tailwind 50 */
-  --primary-color-transparent: rgba(59, 130, 246, 0.2);
+  --primary-color-transparent: rgba(59, 130, 246, 0.2); /* Pour focus, etc. */
+  --accent-color: #EF4444; /* Rouge Tailwind 500 (badges non lus, erreurs) */
+  --success-color: #10B981; /* Vert Tailwind 500 (pour boutons 'Membre') */
 
-  --accent-color: #EF4444; /* Rouge Tailwind 500 pour les badges non lus */
-
+  /* Fonds */
+  --body-bg: #E5E7EB; /* Gris Tailwind 200 (fond global page) */
+  --app-container-bg: #FFFFFF; /* Fond pour les conteneurs de layout principaux */
+  --app-layout-bg: #FFFFFF; /* Fond du layout de chat principal */
   --sidebar-bg: #FFFFFF;
-  --sidebar-header-bg: #F9FAFB; /* Légèrement différent pour le profil utilisateur */
-  --chat-area-bg: #F3F4F6; /* Fond de la liste des messages */
-  --chat-area-bg-main: #FFFFFF; /* Fond global de la zone de chat, en dehors de la liste */
-  --header-bg: #FFFFFF; /* Utilisé par ChatHeader et potentiellement Navbar */
-  --input-area-bg: #FFFFFF;
+  --sidebar-header-bg: #F9FAFB; /* Gris Tailwind 50 (Profil utilisateur en sidebar) */
+  --chat-area-bg: #F3F4F6; /* Gris Tailwind 100 (Fond de la liste des messages) */
+  --header-bg: #FFFFFF; /* Fond des headers (ChatHeader, Navbar) */
+  --input-area-bg: #FFFFFF; /* Fond de la zone de saisie de message */
   --input-bg: #F3F4F6; /* Fond du champ de saisie lui-même */
-  --message-other-bg: #E5E7EB; /* Gris Tailwind 200 */
+  --message-other-bg: #E5E7EB; /* Gris Tailwind 200 (Bulle message 'other') */
+  --hover-bg-light: #F3F4F6; /* Pour survol des items de liste */
+  --disabled-bg: #E5E7EB; /* Fond pour éléments désactivés */
 
+  /* Textes */
   --text-color-primary: #1F2937; /* Gris Tailwind 800 */
   --text-color-secondary: #6B7280; /* Gris Tailwind 500 */
-  --text-color-nav: #4B5563; /* Gris Tailwind 600 pour la nav sidebar et Navbar */
-  --text-color-timestamp: #9CA3AF; /* Gris Tailwind 400 */
+  --text-color-tertiary: #9CA3AF; /* Gris Tailwind 400 (pour timestamps, indicateurs typing) */
+  --text-color-on-primary: #FFFFFF; /* Texte sur fond --primary-color */
+  --text-color-nav: #4B5563; /* Pour navigation */
+  --text-color-link: var(--primary-color);
 
+  /* Icônes */
   --icon-color: #6B7280;
   --icon-color-muted: #9CA3AF;
+  --icon-color-disabled: #CBD5E0;
 
+  /* Bordures */
   --border-color: #D1D5DB; /* Gris Tailwind 300 */
   --border-color-light: #E5E7EB; /* Gris Tailwind 200 */
 
-  --hover-bg-light: #F3F4F6; /* Gris Tailwind 100 pour les survols */
-  
-  --scrollbar-thumb-color: #CBD5E1; /* Gris Tailwind 300 */
-  --scrollbar-thumb-hover-color: #9CA3AF; /* Gris Tailwind 400 */
+  /* Scrollbar */
+  --scrollbar-thumb-color: #CBD5E1;
+  --scrollbar-thumb-hover-color: #9CA3AF;
 
+  /* Radius & Ombres */
   --border-radius-sm: 4px;
   --border-radius-md: 8px;
   --border-radius-lg: 12px;
-  --border-radius-xl: 18px; /* Pour les bulles de message */
+  --border-radius-xl: 18px;
+  --box-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --box-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 
+  /* Typographie */
   --font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 
-  /* NOUVELLE VARIABLE POUR LA HAUTEUR DE LA NAVBAR */
+  /* Dimensions Layout */
   --navbar-height: 60px; 
+  --sidebar-left-width: 280px;
+  --sidebar-right-width-desktop: 300px;
+  --sidebar-right-width-mobile: 280px; 
 }
 
+/* --- Styles Globaux Body & Application --- */
 body {
   margin: 0;
   font-family: var(--font-family-sans);
-  background-color: #E5E7EB; /* Fond global de la page si l'app ne prend pas tout l'écran */
+  background-color: var(--body-bg);
   color: var(--text-color-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* overflow: hidden;  A ENLEVER d'ici, on veut que la page puisse scroller si le contenu est grand */
 }
 
-/* NOUVEAU: Conteneur global de l'application (Navbar + Contenu principal) */
-/* Ce style s'appliquera au div parent qui contient Navbar et page-content-below-navbar dans App.js */
-.app-container {
+.app-container { /* Div racine dans MainChatLayout et GeneralPageLayout */
   display: flex;
-  flex-direction: column; /* Navbar en haut, contenu en dessous */
-  height: 100vh; /* Prend toute la hauteur de la fenêtre */
+  flex-direction: column;
+  height: 100vh;
   max-height: 100vh;
-  overflow: hidden; /* Empêche les barres de défilement sur ce conteneur global si le contenu interne est bien géré */
+  background-color: var(--app-container-bg); /* Fond pour le conteneur global de la page */
+  overflow: hidden; /* Retiré pour permettre au contenu de .page-content-below-navbar de scroller si besoin */
 }
 
-/* NOUVEAU: Conteneur pour TOUT le contenu SOUS la Navbar */
+/* La Navbar est stylée par son propre CSS (Navbar.css)
+   Si Navbar.css utilise position:sticky, elle prendra sa hauteur var(--navbar-height)
+   et .page-content-below-navbar prendra l'espace restant.
+*/
+
 .page-content-below-navbar {
-  flex-grow: 1; /* Prend tout l'espace vertical restant */
-  overflow-y: auto; /* Permet le scroll pour le contenu de la page si elle est plus grande que l'espace dispo */
-  display: flex; /* Pour que .app-layout (chat) ou .simple-content-page puisse prendre 100% de hauteur */
-  flex-direction: column; /* Au cas où le contenu interne a besoin de se stacker */
+  flex-grow: 1; /* Prend tout l'espace vertical restant sous la Navbar */
+  overflow: hidden; 
+  display: flex; 
+  flex-direction: column;
 }
 
-/* Layout spécifique du CHAT (Sidebar, ChatArea, SidebarRight) */
-/* Ce .app-layout est celui qui est à l'intérieur de .page-content-below-navbar pour ChatPage */
+/* Layout spécifique du CHAT (racine de ChatPage.js) */
 .app-layout {
   display: flex;
   flex-grow: 1; /* Prend toute la hauteur de son parent (.page-content-below-navbar) */
-  /* height: 100vh;  Non, car la hauteur est héritée et gérée par flex-grow */
-  /* max-height: 100vh; Non plus */
-  background-color: white; /* Fond de l'application principale (zone de chat) */
-  /* box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); */ /* Peut-être pas nécessaire ici si .app-container l'a déjà */
-  /* margin-top: 100px; A ENLEVER, la Navbar est gérée séparément */
+  background-color: var(--app-layout-bg);
+  overflow: hidden; 
+  position: relative; 
 }
 
-/* NOUVEAU: Styles pour les pages de contenu simple (Profil, EditProfil, 404 etc.) */
-.simple-content-page {
-  padding: 25px 30px; /* Un padding général pour ces pages */
-  width: 100%;
-  box-sizing: border-box;
-  flex-grow: 1; /* Pour qu'il remplisse l'espace dans page-content-below-navbar */
-  /* overflow-y: auto;  Normalement géré par page-content-below-navbar, mais peut être utile si le contenu interne est spécifique */
-}
-
-
-/* Styles globaux pour les boutons */
-button {
-  font-family: var(--font-family-sans);
-  cursor: pointer;
-}
-
-input, textarea, select {
-  font-family: var(--font-family-sans);
-}
-
-/* Assurez-vous que les composants internes du chat gèrent leur propre scroll
-   et que leur hauteur est déterminée par flexbox et non par des hauteurs fixes.
-*/
-.sidebar-left,
-.sidebar-right {
-  /* height: 100%;  A ENLEVER - la hauteur vient du conteneur flex .app-layout */
+/* Colonnes du Chat - Styles par défaut (Desktop) */
+.sidebar-left {
+  width: var(--sidebar-left-width);
+  min-width: var(--sidebar-left-width);
+  background-color: var(--sidebar-bg);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
   overflow-y: auto;
-  /* ... autres styles ... */
+  transition: transform 0.3s ease-in-out, min-width 0.3s ease-in-out;
 }
 
 .chat-area {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  /* height: 100%; A ENLEVER */
-  overflow: hidden; /* ChatArea ne scrolle pas, c'est MessageList qui scrolle */
+  background-color: var(--chat-area-bg-main);
+  overflow: hidden; 
+  transition: transform 0.3s ease-in-out;
 }
 
-.message-list {
-  flex-grow: 1;
+.sidebar-right {
+  width: var(--sidebar-right-width-desktop);
+  min-width: var(--sidebar-right-width-desktop);
+  background-color: var(--sidebar-bg);
+  border-left: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
   overflow-y: auto;
-  /* ... autres styles ... */
+  transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
 }
 
-/* Si vous avez un .profile-page-container, assurez-vous qu'il ne rentre pas en conflit */
+/* Styles pour les pages simples (Profil, NotFound, etc.) */
+.simple-content-page {
+  padding: 25px 30px;
+  width: 100%;
+  box-sizing: border-box;
+  flex-grow: 1; /* Pour qu'il remplisse l'espace */
+  overflow-y: auto; /* Permet le scroll pour le contenu de la page simple */
+}
 .profile-page-container {
-  width: 100%; /* Pour qu'il prenne la largeur de .simple-content-page */
-  max-width: 700px; /* Exemple de largeur max pour le contenu du profil */
-  margin: 0 auto; /* Centrer la carte de profil */
-  padding: 20px 0; /* Un peu d'espace vertical */
+  width: 100%; max-width: 700px; margin: 0 auto; padding: 20px 0;
+}
+
+/* Styles de scrollbar */
+::-webkit-scrollbar { width: 7px; height: 7px; }
+::-webkit-scrollbar-track { background: transparent; } /* Ou var(--body-bg) pour un léger contraste */
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb-color); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover-color); }
+
+/* Boutons et Inputs Globaux */
+button { font-family: var(--font-family-sans); cursor: pointer; }
+input, textarea, select { font-family: var(--font-family-sans); }
+
+/* Helpers pour responsive */
+.mobile-only { display: none !important; }
+.desktop-only { display: inherit; }
+
+
+/* --- MEDIA QUERIES POUR RESPONSIVE --- */
+
+/* Tablettes et Petits Desktops */
+@media (max-width: 1024px) {
+  .sidebar-right {
+    /* Cachée par défaut sur tablette, sera affichée via JS si besoin */
+    display: none; 
+    /* Si elle doit être un panneau off-canvas sur tablette aussi: */
+    /* position: fixed; right: 0; top: var(--navbar-height); bottom: 0; transform: translateX(100%); ... etc. */
+  }
+  .chat-header .action-btn[title="Informations du salon"].mobile-only { /* Bouton Info pour SidebarRight */
+      display: inline-flex !important;
+  }
+  .desktop-only { display: none !important; }
+}
+
+/* Mobiles */
+@media (max-width: 768px) {
+  .app-layout {
+    overflow-x: hidden; 
+  }
+
+  .sidebar-left {
+    width: 100%; min-width: 100%;
+    position: absolute; top: 0; left: 0; bottom: 0; 
+    z-index: 20; 
+    transform: translateX(0%); 
+    border-right: none;
+  }
+  
+  .chat-area {
+    width: 100%; min-width: 100%;
+    position: absolute; top: 0; left: 0; bottom: 0;
+    z-index: 10; 
+    transform: translateX(100%);
+  }
+
+  .app-layout.show-chat-area .sidebar-left { transform: translateX(-100%); }
+  .app-layout.show-chat-area .chat-area { transform: translateX(0%); z-index: 30; }
+
+  .sidebar-right {
+    display: flex !important; 
+    position: fixed; 
+    right: 0; top: 0; bottom: 0;
+    width: min(85vw, var(--sidebar-right-width-mobile));
+    min-width: 240px; 
+    max-width: var(--sidebar-right-width-mobile);
+    transform: translateX(100%); 
+    z-index: 110; 
+    box-shadow: -3px 0 10px rgba(0,0,0,0.15);
+    border-left: 1px solid var(--border-color-light);
+  }
+  .app-layout.show-sidebar-right .sidebar-right { transform: translateX(0%); }
+  .app-layout.show-sidebar-right .sidebar-right-overlay { display: block; }
+
+  .sidebar-right-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0,0,0,0.4);
+    z-index: 105; display: none; cursor: pointer;
+  }
+
+  .mobile-only { display: inline-flex !important; }
+  .desktop-only { display: none !important; }
+  .chat-header .action-btn[title="Informations du salon"].mobile-only {
+      display: inline-flex !important;
+  }
+}
+
+/* Styles pour le conteneur des pages d'authentification (optionnel) */
+.auth-page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh; /* Prend toute la hauteur si c'est le seul contenu */
+  padding: 20px;
+  background-color: var(--body-bg); /* Ou une autre couleur de fond */
 }

@@ -1,38 +1,75 @@
 // src/components/Sidebar/RoomList.js
 import React from 'react';
-import { FaHashtag, FaPaintBrush, FaRocket, FaCoffee } from 'react-icons/fa'; // Exemples d'icônes
+// Importer Avatar si vous voulez une icône par défaut plus générique, sinon les icônes de FontAwesome
+import { 
+    FaHashtag, FaPaintBrush, FaRocket, FaCoffee, 
+    FaComments, FaLock, FaPlusCircle 
+} from 'react-icons/fa';
 import './RoomList.css';
 
-// Mapping des noms d'icônes aux composants d'icônes
 const iconMap = {
-  FaHashtag: FaHashtag,
-  FaPaintBrush: FaPaintBrush,
-  FaRocket: FaRocket,
-  FaCoffee: FaCoffee,
+  FaHashtag, FaPaintBrush, FaRocket, FaCoffee, FaComments, FaLock,
+  Default: FaHashtag 
 };
 
+const RoomList = ({ 
+    title = "Salons de Groupe",
+    rooms, 
+    activeRoomId, 
+    onSelectRoom, 
+    onOpenCreateRoomModal,
+}) => {
 
-const RoomList = ({ rooms, activeRoomId, onSelectRoom }) => {
+  if (!Array.isArray(rooms)) { // Garde pour s'assurer que rooms est un tableau
+    console.warn("RoomList: 'rooms' prop n'est pas un tableau.", rooms);
+    return (
+        <div className="room-list-container">
+            {title && <h3 className="list-title">{title}</h3>}
+            <p className="empty-list-text">Chargement ou erreur...</p>
+        </div>
+    );
+  }
+  
+  if (rooms.length === 0) {
+    return (
+      <div className="room-list-container">
+        {title && <h3 className="list-title">{title}</h3>}
+        <p className="empty-list-text">Aucun salon de groupe.</p>
+        {onOpenCreateRoomModal && (
+          <button className="new-room-btn" onClick={onOpenCreateRoomModal}>
+            <FaPlusCircle style={{ marginRight: '8px' }} /> Nouveau Salon
+          </button>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className="room-list-container">
-      <h3 className="list-title">Salons de Discussion</h3>
+      {title && <h3 className="list-title">{title}</h3>}
       <ul className="room-list">
         {rooms.map(room => {
-          const IconComponent = iconMap[room.icon] || FaHashtag; // Fallback icon
+          // Ce composant ne s'attend qu'à des salons de groupe ici
+          const IconComponent = iconMap[room.icon_name] || iconMap['Default'];
           return (
             <li
               key={room.id}
-              className={`room-item ${room.id === activeRoomId ? 'active' : ''}`}
+              className={`room-item group-room-item ${room.id === activeRoomId ? 'active' : ''}`}
               onClick={() => onSelectRoom(room.id)}
+              title={`Ouvrir le salon ${room.name}`}
             >
               <IconComponent className="room-icon" />
               <span className="room-name">{room.name}</span>
-              {room.unread > 0 && <span className="unread-badge">{room.unread}</span>}
+              {room.unread_count > 0 && <span className="unread-badge">{room.unread_count}</span>}
             </li>
           );
         })}
       </ul>
-      <button className="new-room-btn">+ Nouveau Salon</button>
+      {onOpenCreateRoomModal && (
+        <button className="new-room-btn" onClick={onOpenCreateRoomModal}>
+          <FaPlusCircle style={{ marginRight: '8px' }} /> Nouveau Salon
+        </button>
+      )}
     </div>
   );
 };

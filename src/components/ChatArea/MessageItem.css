@@ -1,20 +1,217 @@
-/* src/components/ChatArea/MessageItem.css */
-.message-item { display: flex; margin-bottom: 15px; max-width: 70%; align-items: flex-end; }
-.message-item.own-message { margin-left: auto; flex-direction: row-reverse; }
-.message-item.other-message { margin-right: auto; }
-.message-bubble { padding: 10px 15px; border-radius: 18px; line-height: 1.45; position: relative; box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
-.message-item.own-message .message-bubble { background-color: var(--primary-color); color: white; border-bottom-right-radius: 6px; /* Petite astuce de style */ }
-.message-item.other-message .message-bubble { background-color: var(--message-other-bg); color: var(--text-color-primary); border-bottom-left-radius: 6px; }
-.sender-name { font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; color: var(--primary-color); }
-.message-text { word-wrap: break-word; white-space: pre-wrap; /* Conserve les sauts de ligne */ }
-.message-timestamp { font-size: 0.7rem; color: var(--text-color-timestamp); margin-top: 5px; text-align: right; }
-.message-item.own-message .message-timestamp { color: rgba(255, 255, 255, 0.7); }
-.message-item .avatar-image { /* Style pour Avatar via sa classe interne, ou styler Avatar directement */ }
-.message-item.other-message .avatar-image-container { margin-right: 10px; /* Si Avatar est wrappé */}
-.message-item.own-message .avatar-image-container { margin-left: 10px; }
-/* Ajouter une classe au conteneur de l'avatar dans Avatar.js si besoin de marges externes */
-.avatar-container { /* Dans Avatar.js, le div parent pourrait avoir cette classe */
-  /* Pour s'assurer que les marges sont appliquées correctement */
+.message-item {
+  display: flex;
+  margin-bottom: 15px;
+  max-width: 70%; /* Vous aviez 70% */
+  align-items: flex-end; /* Garde l'alignement en bas pour l'avatar et la bulle */
 }
-.message-item.other-message > .avatar-container { margin-right: 10px; }
-.message-item.own-message > .avatar-container { margin-left: 10px; }
+
+.message-item.own-message {
+  margin-left: auto;
+  flex-direction: row-reverse;
+}
+
+.message-item.other-message {
+  margin-right: auto;
+}
+
+.message-item.other-message > .avatar-container { 
+  margin-right: 10px;
+}
+.message-item.own-message > .avatar-container { 
+  margin-left: 10px;
+}
+
+.message-bubble {
+  padding: 10px 15px;
+  border-radius: 18px; 
+  line-height: 1.45; 
+  position: relative;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.08); 
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  /* max-width: calc(100% - 50px); Inutile si message-item a déjà un max-width */
+}
+
+.message-item.own-message .message-bubble {
+  background-color: var(--primary-color);
+  color: white;
+  border-bottom-right-radius: 6px; 
+}
+
+.message-item.other-message .message-bubble {
+  background-color: var(--message-other-bg); 
+  color: var(--text-color-primary);
+  border-bottom-left-radius: 6px; 
+}
+
+.sender-name {
+  font-size: 0.8rem;
+  font-weight: 600; 
+  margin-bottom: 4px; 
+  color: var(--primary-color); 
+}
+/* Cacher le nom pour ses propres messages */
+.message-item.own-message .message-bubble .sender-name {
+  display: none;
+}
+
+
+.message-text {
+  word-wrap: break-word;
+  white-space: pre-wrap; /* Conserve les sauts de ligne */
+}
+.message-text a {
+    color: inherit; 
+    text-decoration: underline;
+    
+}
+.message-text a:hover {
+    /* .message-item.own-message .message-bubble .message-text a:hover { color: #ffffff; } */
+    /* .message-item.other-message .message-bubble .message-text a:hover { color: var(--primary-color-dark); } */
+    opacity: 0.8; /* Simple effet de survol */
+}
+
+
+.message-timestamp {
+  font-size: 0.7rem; /* Votre font-size */
+  color: var(--text-color-timestamp); /* Couleur par défaut pour le timestamp */
+  margin-top: 5px; /* Votre margin */
+  text-align: right;
+}
+.message-item.own-message .message-timestamp {
+  color: rgba(255, 255, 255, 0.7); /* Votre couleur pour timestamp sur bulle "own" */
+}
+/* Ajuster l'alignement du timestamp pour les messages des autres */
+.message-item.other-message .message-timestamp {
+  text-align: left; /* Si vous préférez le timestamp à gauche pour les autres */
+}
+
+
+/* Nouveaux styles pour l'affichage des médias DANS la bulle */
+.message-media-container {
+  margin-top: 5px; /* Espace si texte au-dessus */
+  margin-bottom: 8px; /* Espace avant le timestamp ou texte en dessous */
+  border-radius: 10px; /* Bordure arrondie pour le conteneur média */
+  overflow: hidden; /* Pour que les médias enfants respectent le border-radius */
+}
+
+.message-media-image {
+  max-width: 100%; /* Pour s'adapter à la bulle de message */
+  max-height: 320px; /* Limiter la hauteur de l'image */
+  /* border-radius: 10px; Inutile si .message-media-container a overflow:hidden et border-radius */
+  object-fit: cover;
+  cursor: pointer; /* Pour indiquer qu'on peut cliquer (pour ouvrir en grand plus tard) */
+  display: block; /* Pour éviter l'espace en dessous de l'image */
+}
+
+.message-media-video-container,
+.message-media-audio-container {
+  /* Le fond sera celui de la bulle. Si vous voulez un fond différent pour le média : */
+  /* background-color: rgba(0,0,0,0.05); */
+  padding: 8px; /* Léger padding autour du lecteur vidéo/audio */
+  border-radius: 8px; /* Conserver le radius du conteneur média */
+}
+
+.message-media-video-container .download-link {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.75em;
+  color: inherit; /* Hérite de la couleur du texte de la bulle */
+  opacity: 0.8;
+  text-decoration: none;
+}
+.message-media-video-container .download-link:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+.message-media-video-container .download-link svg {
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+
+.message-media-audio-container {
+  display: flex;
+  align-items: center;
+}
+.message-media-audio-container .download-link-inline {
+  margin-left: 8px;
+  color: inherit; /* Hérite de la couleur du texte de la bulle */
+  opacity: 0.8;
+  cursor: pointer;
+}
+.message-media-audio-container .download-link-inline:hover {
+  opacity: 1;
+}
+
+
+.message-media-video,
+.message-media-audio {
+  width: 100%;
+  max-width: 100%; /* S'assurer qu'il ne dépasse pas la bulle */
+  border-radius: 6px; /* Léger radius pour le lecteur lui-même */
+}
+.message-media-audio {
+    height: 40px; /* Hauteur standard pour les lecteurs audio compacts */
+}
+
+.message-media-file {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  /* Le fond sera celui de la bulle. Si vous voulez un fond distinct pour le lien de fichier : */
+  /* background-color: rgba(0,0,0,0.05); */
+  /* border: 1px solid rgba(0,0,0,0.08); */
+  border-radius: 8px;
+  text-decoration: none;
+  color: inherit; /* Hérite de la couleur du texte de la bulle */
+  gap: 10px;
+  transition: background-color 0.2s, opacity 0.2s;
+}
+.message-media-file:hover {
+  /* background-color: rgba(0,0,0,0.1); */
+  opacity: 0.8;
+}
+.message-media-file span {
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.9em;
+}
+.message-media-file svg {
+  min-width: 16px; /* S'assure que l'icône est visible */
+  /* La couleur de l'icône sera héritée ou peut être définie spécifiquement */
+}
+
+
+/* Dans MessageItem.css */
+
+.message-text-link {
+  color: inherit; /* Hérite la couleur du texte de la bulle (blanc sur own, --text-color-primary sur other) */
+  text-decoration: underline;
+  font-weight: 500; /* Pour les faire ressortir un peu */
+}
+
+.message-text-link:hover {
+  text-decoration: none; /* Ou un autre style de survol */
+  opacity: 0.8;
+}
+
+/* Si vous avez utilisé la classe message-media-link-standalone pour les liens traités comme média */
+.message-media-link-standalone {
+  display: inline-block; /* Ou block si vous voulez qu'il prenne toute la largeur disponible */
+  padding: 8px 10px;
+  background-color: rgba(0,0,0,0.03); /* Léger fond pour le distinguer */
+  border-radius: 6px;
+  color: inherit; /* Hérite la couleur du texte de la bulle */
+  text-decoration: none;
+  align-items: center;
+}
+.message-media-link-standalone svg {
+    vertical-align: middle; /* Pour bien aligner l'icône FiLink */
+}
+.message-media-link-standalone:hover {
+  background-color: rgba(0,0,0,0.06);
+  text-decoration: underline;
+}

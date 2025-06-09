@@ -1,10 +1,116 @@
-.chat-header { display: flex; align-items: center; padding: 15px 25px; border-bottom: 1px solid var(--border-color); background-color: var(--header-bg); height: 40px; /* Hauteur fixe pour aligner avec UserProfile */ }
-.chat-header .back-btn { background: none; border: none; color: var(--icon-color); cursor: pointer; margin-right: 15px; }
-.chat-header .room-info { flex-grow: 1; }
-.chat-header .room-title { font-size: 1.2rem; font-weight: 600; margin: 0; color: var(--text-color-primary); }
-.chat-header .room-members { font-size: 0.85rem; color: var(--text-color-secondary); display: flex; align-items: center; gap: 4px; }
-.chat-header .header-actions { display: flex; gap: 10px; }
-.chat-header .action-btn { background: none; border: none; color: var(--icon-color); cursor: pointer; padding: 5px; }
-.chat-header .action-btn:hover { color: var(--primary-color); }
-.mobile-only { display: none; } /* Sera affiché via media query pour mobile */
-@media (max-width: 768px) { .mobile-only { display: inline-block; } }
+/* src/components/ChatArea/ChatHeader.css */
+.chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Éléments à gauche, au centre (room-info), et à droite */
+  padding: 0 15px; /* Padding horizontal, vertical géré par hauteur */
+  height: 55px; /* Hauteur fixe pour le header. Peut être une variable CSS. */
+  background-color: var(--header-bg);
+  border-bottom: 1px solid var(--border-color-light); /* Bordure plus légère */
+  box-sizing: border-box; /* Le padding et la bordure sont inclus dans la hauteur/largeur */
+  width: 100%; /* Prend la largeur de son parent .chat-area */
+  /* flex-shrink: 0; // Cette propriété est mieux placée sur .chat-area > .chat-header dans ChatArea.css ou App.css */
+}
+
+.chat-header .back-btn { /* Classe .mobile-only gérée par App.css */
+  background: none;
+  border: none;
+  color: var(--icon-color);
+  cursor: pointer;
+  padding: 8px; /* Augmenter la zone cliquable */
+  margin-right: 10px; /* Espace avant le titre si visible */
+  display: flex; /* Pour bien centrer l'icône */
+  align-items: center;
+  justify-content: center;
+}
+.chat-header .back-btn:hover {
+  color: var(--primary-color);
+}
+
+
+.chat-header .room-info {
+  flex-grow: 1; /* Prend l'espace central */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centrer verticalement le contenu (titre, méta) */
+  overflow: hidden; /* Empêcher le contenu de déborder */
+  margin: 0 10px; /* Espacement par rapport aux boutons adjacents */
+} 
+
+.chat-header .room-title {
+  font-size: 1.1rem; /* Ajusté pour une meilleure lisibilité */
+  font-weight: 600;
+  color: var(--text-color-primary);
+  margin: 0; /* Enlever les marges par défaut du h2 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* "..." si le nom est trop long */
+}
+
+.chat-header .room-meta-info {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Espace entre "membres/statut" et "typing" */
+  font-size: 0.8rem; /* Plus petit que le titre */
+  color: var(--text-color-secondary);
+  margin-top: 2px; /* Petit espace sous le titre */
+  min-height: 1.1em; /* Pour éviter les sauts de layout */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chat-header .room-members-or-status { /* Wrapper pour le nombre de membres ou statut en ligne */
+    display: flex;
+    align-items: center;
+}
+.chat-header .room-members-or-status svg { /* Pour FiUsers */
+  margin-right: 5px;
+  flex-shrink: 0; /* Empêche l'icône de rétrécir */
+}
+
+.chat-header .typing-indicator {
+  display: flex;
+  align-items: center;
+  font-style: italic;
+  color: var(--primary-color);
+  /* animation pour FiEdit3 est dans le style inline du composant JS */
+}
+.chat-header .typing-indicator.with-meta { /* Si affiché à côté de room-members-or-status */
+  /* Peut-être pas nécessaire si on utilise 'gap' sur .room-meta-info */
+}
+
+
+.chat-header .header-actions {
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Espacement réduit entre les boutons d'action */
+  flex-shrink: 0; /* Empêche cette section de rétrécir */
+}
+
+.chat-header .action-btn {
+  background: none;
+  border: none;
+  color: var(--icon-color);
+  cursor: pointer;
+  padding: 8px; /* Bonne zone cliquable */
+  border-radius: 50%; /* Boutons ronds pour les actions */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s, color 0.2s;
+}
+.chat-header .action-btn:hover {
+  background-color: var(--hover-bg-light);
+  color: var(--primary-color);
+}
+
+/* La visibilité des boutons .mobile-only est gérée par App.css */
+/* Si vous avez besoin de cacher des boutons spécifiques sur des tailles d'écran spécifiques,
+   vous pouvez ajouter des classes comme .hide-on-small-mobile et les définir dans les media queries de App.css */
+
+@keyframes typing-pulse { /* Garder l'animation ici ou la mettre dans App.css si utilisée ailleurs */
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}

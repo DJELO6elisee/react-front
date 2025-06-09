@@ -1,6 +1,145 @@
-.message-input-form { display: flex; align-items: center; padding: 15px 25px; border-top: 1px solid var(--border-color); background-color: var(--input-area-bg); }
-.message-input-field { flex-grow: 1; border: none; padding: 12px 15px; border-radius: 20px; background-color: var(--input-bg); color: var(--text-color-primary); font-size: 0.95rem; margin: 0 10px; }
-.message-input-field:focus { outline: none; box-shadow: 0 0 0 2px var(--primary-color-transparent); }
-.input-action-btn, .send-btn { background: none; border: none; color: var(--icon-color- Muted); cursor: pointer; padding: 8px; transition: color 0.2s ease; }
-.input-action-btn:hover, .send-btn:hover { color: var(--primary-color); }
-.send-btn { color: var(--primary-color); } /* Envoyer est plus proéminent */
+.message-input-form {
+  display: flex;
+  align-items: center;
+  padding: 15px 25px; /* Votre padding */
+  border-top: 1px solid var(--border-color);
+  background-color: var(--input-area-bg);
+  position: relative; /* Nécessaire pour le positionnement absolu de file-preview-container */
+}
+
+.message-input-field {
+  flex-grow: 1;
+  border: none;
+  padding: 12px 15px; /* Votre padding */
+  border-radius: 20px; /* Votre border-radius */
+  background-color: var(--input-bg);
+  color: var(--text-color-primary);
+  font-size: 0.95rem; /* Votre font-size */
+  margin: 0 10px; /* Votre margin */
+}
+
+.message-input-field:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--primary-color-transparent); /* Votre box-shadow au focus */
+}
+
+.input-action-btn { /* Style général pour les boutons d'action (joindre, emoji) */
+  background: none;
+  border: none;
+  color: var(--icon-color-muted); /* Votre couleur pour les icônes "muted" */
+  cursor: pointer;
+  padding: 8px; /* Votre padding */
+  transition: color 0.2s ease;
+  display: flex; /* Pour bien centrer l'icône si besoin */
+  align-items: center;
+  justify-content: center;
+}
+
+.input-action-btn:hover {
+  color: var(--primary-color); /* Votre couleur au survol */
+}
+
+.send-btn { /* Style spécifique pour le bouton Envoyer */
+  background: none;
+  border: none;
+  color: var(--primary-color); /* Votre couleur proéminente pour Envoyer */
+  cursor: pointer;
+  padding: 8px; /* Votre padding */
+  transition: color 0.2s ease;
+  display: flex; /* Pour bien centrer l'icône ou le spinner */
+  align-items: center;
+  justify-content: center;
+}
+
+.send-btn:hover {
+  color: var(--primary-color-dark, var(--primary-color)); /* Votre couleur au survol, fallback si --primary-color-dark n'est pas défini */
+}
+
+/* Styles pour les boutons désactivés */
+.input-action-btn:disabled,
+.send-btn:disabled {
+  color: var(--icon-color-disabled, #a0a0a0); /* Couleur pour icônes désactivées, ajoutez cette variable ou ajustez */
+  cursor: not-allowed;
+  opacity: 0.7; /* Un peu plus visible que 0.5 */
+}
+.message-input-field:disabled {
+   background-color: var(--input-bg-disabled, #f0f0f0); /* Fond pour input désactivé, ajoutez ou ajustez */
+   cursor: not-allowed;
+}
+
+
+.file-preview-container {
+  position: absolute;
+  bottom: calc(100% + 8px); /* Se positionne au-dessus de la barre d'input avec un petit espace */
+  left: 25px; /* S'aligne avec le padding de message-input-form */
+  right: 25px; /* S'aligne avec le padding de message-input-form */
+  display: flex;
+  align-items: center;
+  padding: 10px 12px; /* Un padding interne confortable */
+  background-color: var(--input-bg); /* Peut-être le même fond que l'input pour la cohérence */
+  border: 1px solid var(--border-color);
+  border-radius: 12px; /* Un radius un peu plus doux */
+  font-size: 0.9rem; /* Légèrement plus petit que l'input principal */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08); /* Ombre subtile */
+  z-index: 10;
+  max-width: calc(100% - 50px); /* Pour ne pas déborder si le nom de fichier est très long */
+}
+
+.file-image-preview {
+  max-width: 70px; /* Taille d'aperçu pour l'image */
+  max-height: 45px;
+  object-fit: cover;
+  border-radius: 6px; /* Radius pour l'image elle-même */
+  margin-right: 12px; /* Espace entre l'image et le nom/bouton */
+  border: 1px solid var(--border-color-light, var(--border-color)); /* Bordure légère pour l'image */
+}
+
+.file-name-preview {
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-color-secondary, var(--text-color-primary)); /* Couleur pour le nom du fichier */
+  display: flex;
+  align-items: center;
+}
+.file-name-preview svg { /* Style pour l'icône FiFileText */
+  margin-right: 6px;
+  color: var(--icon-color-muted); /* Utiliser la même couleur que les boutons d'action */
+}
+
+.remove-file-btn {
+  background: none;
+  border: none;
+  color: var(--icon-color-muted); /* Couleur de base pour le bouton "retirer" */
+  cursor: pointer;
+  padding: 0; /* Pas besoin de padding si c'est juste une icône */
+  margin-left: 10px; /* Espace par rapport au nom du fichier */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+.remove-file-btn:hover {
+  color: var(--danger-color, #ef4444); /* Couleur au survol (rouge danger) */
+}
+
+/* Style pour le petit spinner dans le bouton Envoyer */
+.spinner-small {
+  border: 2px solid rgba(255, 255, 255, 0.3); /* Couleur de fond de la piste du spinner, si le bouton est sur fond coloré */
+  border-radius: 50%;
+  border-top-color: var(--primary-color); /* La couleur principale de votre bouton Envoyer ou blanc si fond coloré */
+  /* Si votre .send-btn a un fond coloré et du texte blanc, utilisez #fff pour border-top-color */
+  /* Exemple : si .send-btn a background: var(--primary-color) et color: white, alors : */
+  /* border-top-color: #fff; */
+  /* border: 2px solid rgba(255,255,255,0.2); */
+
+  width: 16px; /* Taille du spinner */
+  height: 16px;
+  animation: spin 0.8s linear infinite; /* Vitesse de rotation */
+  display: inline-block; /* S'assure qu'il ne prend pas toute la largeur */
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

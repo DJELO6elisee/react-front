@@ -1,30 +1,191 @@
-.chat-about-panel { padding: 20px; border-bottom: 1px solid var(--border-color-light); }
-.about-title { font-size: 1.25rem; font-weight: 700; margin-top: 0; margin-bottom: 8px; color: var(--text-color-primary); }
-.room-description { font-size: 0.9rem; color: var(--text-color-secondary); margin-bottom: 20px; line-height: 1.5; }
+/* ChatAboutPanel.css */
 
-.participants-section { margin-bottom: 20px; }
-.participants-avatars { display: flex; align-items: center; gap: -10px; /* Superposition des avatars */ }
-.participants-avatars .avatar-image { border: 2px solid white; /* Pour la superposition */ }
+.chat-about-panel {
+  padding: 20px;
+  /* J'ai retiré border-bottom d'ici, car on utilise des séparateurs internes maintenant */
+}
+
+.about-title {
+  font-size: 1.25rem; /* Votre style */
+  font-weight: 700;   /* Votre style */
+  margin-top: 0;
+  margin-bottom: 8px; /* Votre style */
+  color: var(--text-color-primary);
+}
+
+.room-description {
+  font-size: 0.9rem; /* Votre style */
+  color: var(--text-color-secondary);
+  margin-bottom: 20px; /* Votre style */
+  line-height: 1.5;    /* Votre style */
+}
+
+/* NOUVEAU : Style pour les séparateurs de section */
+.sidebar-section-divider {
+  height: 1px;
+  background-color: var(--border-color-light, var(--border-color)); /* Utilise votre variable ou un fallback */
+  margin: 20px 0; /* Espace vertical pour le séparateur */
+}
+
+/* Section des Participants */
+.participants-section {
+  /* margin-bottom: 20px; Plus besoin si on utilise le divider après */
+}
+
+/* NOUVEAU : Style pour le sous-titre de la section des participants */
+.participants-section .section-subtitle {
+  font-size: 0.95rem; /* Légèrement plus petit que le titre principal */
+  font-weight: 500;   /* Moins gras que le titre principal */
+  color: var(--text-color-primary);
+  margin-bottom: 12px;
+  display: flex;        /* Pour aligner l'icône et le texte */
+  align-items: center;
+}
+.participants-section .section-subtitle svg { /* Style pour l'icône FiUsers */
+  margin-right: 8px;
+  vertical-align: middle; /* Meilleur alignement vertical */
+  /* La couleur de l'icône sera héritée (text-color-primary) ou vous pouvez la spécifier */
+}
+
+
+.participants-avatars {
+  display: flex;
+  align-items: center;
+  /* gap: -10px;  // Remplacé par une marge négative sur l'avatar pour un meilleur contrôle */
+}
+
+/* Appliquer la superposition directement sur l'élément Avatar (ou son wrapper) */
+/* Si votre composant Avatar a un wrapper ou une classe principale, ciblez-la. */
+/* Exemple si Avatar a une classe .avatar-component-wrapper : */
+.participants-avatars .avatar-component-wrapper:not(:first-child) { 
+  margin-left: -10px; /* Superposition */
+}
+.participants-avatars .avatar-component-wrapper .avatar-image { /* Cible l'image dans l'avatar */
+  border: 2px solid var(--background-color-panel, white); /* Bordure pour la superposition, utilise une variable pour le fond du panneau */
+}
+/* Si vous n'avez pas de wrapper, et que vous styler via .avatar-image (classe interne d'Avatar) */
+/* .participants-avatars .avatar-image:not(:first-of-type) { margin-left: -10px; } */
+/* .participants-avatars .avatar-image { border: 2px solid var(--background-color-panel, white); } */
+
+
 .avatar-more {
-  width: 32px; height: 32px; border-radius: 50%; background-color: var(--primary-color-light); color: var(--primary-color);
-  display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 600;
-  border: 2px solid white; cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--primary-color-light); /* Votre style */
+  color: var(--primary-color);                  /* Votre style */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;    /* Votre style */
+  font-weight: 600;   /* Votre style */
+  border: 2px solid var(--background-color-panel, white); /* Assurez-vous que la couleur de fond correspond au panneau */
+  cursor: pointer;
+  margin-left: -10px; /* Pour la superposition avec l'avatar précédent */
+  z-index: 1; /* Pour être au-dessus de l'avatar précédent */
 }
+
 .add-participant-btn {
-  background: none; border: none; color: var(--primary-color); cursor: pointer; margin-left: 5px; /* Ajustez si superposition */
-  display: flex; align-items: center; justify-content: center; width: 32px; height: 32px;
+  background: none;
+  border: none;
+  color: var(--primary-color); /* Votre style */
+  cursor: pointer;
+  margin-left: 8px; /* Espacement après les avatars/avatar-more */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px; /* Conserver la taille */
+  height: 32px;/* Conserver la taille */
+  padding: 0; /* L'icône devrait remplir */
+  transition: opacity 0.2s ease;
 }
-.add-participant-btn svg { stroke-width: 2; }
+.add-participant-btn:hover {
+  opacity: 0.8;
+}
+.add-participant-btn svg {
+  stroke-width: 2; /* Votre style */
+}
 
-.notification-settings { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: var(--text-color-primary); }
-.notification-settings svg { color: var(--icon-color); }
 
-/* Simple Toggle Switch CSS (à améliorer si besoin) */
-.switch { position: relative; display: inline-block; width: 38px; height: 20px; margin-left: auto; }
-.switch input { opacity: 0; width: 0; height: 0; }
-.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; }
-.slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; }
-input:checked + .slider { background-color: var(--primary-color); }
-input:checked + .slider:before { transform: translateX(18px); }
-.slider.round { border-radius: 20px; }
-.slider.round:before { border-radius: 50%; }
+/* Section des Notifications */
+.notification-settings {
+  display: flex;
+  align-items: center;
+  /* gap: 10px; Remplacé par justify-content et marge sur l'icône */
+  justify-content: space-between; /* Pousse le switch à droite */
+  font-size: 0.9rem;            /* Votre style */
+  color: var(--text-color-primary);
+}
+.notification-settings > span { /* Pour le texte "Notifications" */
+    margin-left: 8px; /* Espace après l'icône FiBell */
+}
+.notification-settings svg { /* Pour l'icône FiBell */
+  color: var(--icon-color); /* Votre style */
+  vertical-align: middle;
+}
+
+
+/* Styles pour le Toggle Switch (vos styles, légèrement ajustés pour la clarté) */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 38px;   /* Votre style */
+  height: 20px;  /* Votre style */
+  /* margin-left: auto;  Plus besoin si justify-content: space-between sur le parent */
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc; /* Votre style */
+  transition: .4s;       /* Votre style */
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;         /* Votre style */
+  width: 14px;          /* Votre style */
+  left: 3px;            /* Votre style */
+  bottom: 3px;          /* Votre style */
+  background-color: white;
+  transition: .4s;        /* Votre style */
+}
+
+input:checked + .slider {
+  background-color: var(--primary-color); /* Votre style */
+}
+input:focus + .slider { /* Ajout d'un style de focus */
+  box-shadow: 0 0 0 2px var(--primary-color-transparent, rgba(var(--primary-color-rgb), 0.3)); /* Assurez-vous d'avoir --primary-color-transparent ou --primary-color-rgb */
+}
+
+input:checked + .slider:before {
+  transform: translateX(18px); /* Votre style */
+}
+
+.slider.round {
+  border-radius: 20px; /* Votre style (hauteur / 2 + padding si besoin) */
+}
+
+.slider.round:before {
+  border-radius: 50%; /* Votre style */
+}
+
+/* NOUVEAU : Style pour le texte placeholder si une section est vide */
+.empty-section-text {
+  font-size: 0.85rem;
+  color: var(--text-color-secondary);
+  font-style: italic;
+  padding: 10px 0; /* Un peu d'espace */
+  text-align: center; /* Centrer si c'est le seul contenu */
+}

@@ -1,14 +1,75 @@
-.sidebar-left {
-  width: 280px;
-  background-color: var(--sidebar-bg);
-  border-right: 1px solid var(--border-color);
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  overflow-y: auto;
+/* src/components/Sidebar/Sidebar.css */
+/* Les propriétés de layout de base de .sidebar-left (width, height, display, etc.) 
+   sont maintenant gérées dans App.css pour le responsive.
+   Ce fichier se concentre sur les styles INTERNES de la Sidebar. */
+
+.user-profile-container-in-sidebar {
+  padding: 15px;
+  background-color: var(--sidebar-header-bg);
+  border-bottom: 1px solid var(--border-color-light);
+  flex-shrink: 0; /* Empêche cette section de rétrécir */
 }
-/* Scrollbar customisée (optionnel mais élégant) */
-.sidebar-left::-webkit-scrollbar { width: 6px; }
-.sidebar-left::-webkit-scrollbar-track { background: transparent; }
-.sidebar-left::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb-color); border-radius: 3px; }
-.sidebar-left::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover-color); }
+
+.user-search-container-in-sidebar { /* Si vous avez un wrapper pour UserSearch */
+  padding: 10px 15px;
+  border-bottom: 1px solid var(--border-color-light);
+  flex-shrink: 0;
+}
+
+/* Style pour les conteneurs de listes (RoomList, ContactList) dans la Sidebar */
+.room-list-container, /* Classe utilisée par RoomList */
+.contact-list-container { /* Classe utilisée par ContactList */
+  padding: 10px 0; /* Espace vertical autour des listes */
+  /* flex-grow: 1; Si vous voulez que les listes prennent l'espace restant, 
+  /* overflow-y: auto; Chaque liste gérera son propre scroll si nécessaire. */
+}
+
+.sidebar-section-divider-horizontal {
+  height: 1px;
+  background-color: var(--border-color-light);
+  margin: 0px 20px; /* Plus de marge verticale si les sections ont déjà du padding */
+  flex-shrink: 0;
+}
+
+/* Styles spécifiques aux éléments de liste dans la sidebar (ex: titres des listes) */
+.list-title { /* Utilisé dans RoomList.js et ContactList.js */
+  font-size: 0.75rem; /* 12px */
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-color-secondary);
+  padding: 8px 20px 4px; /* Padding pour le titre de la section */
+  margin: 0;
+}
+
+.empty-list-text { /* Utilisé dans RoomList.js et ContactList.js */
+  font-size: 0.875rem;
+  color: var(--text-color-secondary);
+  padding: 15px 20px;
+  text-align: center;
+  font-style: italic;
+}
+
+/* Bouton "Nouveau Salon" (dans RoomList.js) */
+.new-room-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(100% - 40px); /* Prend la largeur moins les marges */
+  margin: 10px 20px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--primary-color);
+  background-color: var(--primary-color-lighter);
+  border: 1px solid var(--primary-color-light);
+  border-radius: var(--border-radius-md);
+  transition: background-color 0.2s, color 0.2s;
+}
+.new-room-btn:hover {
+  background-color: var(--primary-color-light);
+  border-color: var(--primary-color);
+}
+.new-room-btn svg {
+  margin-right: 8px;
+}

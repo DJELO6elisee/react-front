@@ -3,60 +3,139 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 25px;
-  height: 60px;
-  background-color: white;
+  padding: 0 20px;
+  height: var(--navbar-height);
+  background-color: var(--header-bg);
   border-bottom: 1px solid var(--border-color);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  position: sticky; /* Ou fixed si vous voulez qu'elle reste toujours en haut */
+  box-shadow: var(--box-shadow-sm);
+  position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 1000; /* Très important pour être au-dessus des sidebars off-canvas */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .navbar-brand {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--primary-color);
-  text-decoration: none;
   display: flex;
   align-items: center;
-  gap: 8px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.navbar-brand svg {
+  margin-right: 8px;
+  font-size: 1.5rem;
+}
+.navbar-brand .brand-text { /* Texte de la marque */
+  display: inline; /* Affiché par défaut */
 }
 
 .navbar-links {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
 }
 
 .nav-link {
-  text-decoration: none;
   color: var(--text-color-nav);
+  text-decoration: none;
   font-weight: 500;
-  font-size: 0.95rem;
-  display: inline-flex;
+  padding: 8px 12px;
+  border-radius: var(--border-radius-md);
+  transition: background-color 0.2s, color 0.2s;
+  display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 0; /* Pour une meilleure zone de clic */
-  position: relative;
 }
-.nav-link::after { /* Soulignement au survol */
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background-color: var(--primary-color);
-  transition: width 0.3s ease;
-}
-.nav-link:hover::after,
-.nav-link.active::after { /* Si vous utilisez NavLink de react-router-dom pour la classe active */
-  width: 100%;
-}
-.nav-link:hover {
+
+.nav-link:hover,
+.nav-link.active {
+  background-color: var(--primary-color-lighter);
   color: var(--primary-color);
 }
-.nav-link .btn { /* Si un bouton est utilisé comme lien */
-    padding: 6px 12px;
+
+.nav-link svg { /* Icône dans un lien */
+  margin-right: 6px;
+}
+.nav-link .nav-link-text { /* Texte dans un lien */
+  display: inline; /* Affiché par défaut */
+}
+
+/* Styles pour le bouton dans la Navbar */
+.navbar-links .btn { /* Cible les composants Button */
+  display: inline-flex; /* Pour bien aligner icône et texte */
+  align-items: center;
+  /* Les props de Button (variant, size) gèrent le style de base */
+}
+.navbar-links .btn svg { /* Icône dans un Button */
+  /* iconLeft de Button gère la marge, mais on peut ajuster si besoin */
+}
+.navbar-links .btn .button-nav-text { /* Texte dans un Button */
+  display: inline; /* Affiché par défaut */
+}
+
+
+/* --- RESPONSIVE NAVBAR --- */
+@media (max-width: 768px) { /* Breakpoint tablette/mobile plus large */
+  .navbar {
+    padding: 0 10px; /* Réduire encore plus le padding */
+  }
+
+  .navbar-brand {
+    font-size: 1rem; /* Plus petit */
+  }
+  .navbar-brand svg {
+    font-size: 1.2rem;
+    margin-right: 5px;
+  }
+  .navbar-brand .brand-text {
+     /* Option: cacher le texte de la marque sur mobile si trop juste */
+    /* display: none; */
+  }
+
+  .navbar-links {
+    gap: 5px; /* Espacement réduit entre les éléments */
+  }
+
+  .nav-link {
+    padding: 8px; /* Padding uniforme pour les icônes */
+    font-size: 0.9rem;
+  }
+  .nav-link svg { /* Icône seule */
+    margin-right: 0; /* Pas de marge si le texte est caché */
+    font-size: 1.3rem; /* Icônes un peu plus grandes */
+  }
+  .nav-link .nav-link-text { /* Cacher le texte des liens */
+    display: none; 
+  }
+
+  /* Pour les boutons (si le composant Button n'a pas sa propre logique responsive pour le texte) */
+  .navbar-links .btn {
+    padding: 6px 8px; /* Ajuster le padding du bouton */
+    min-width: auto; /* Permettre au bouton de rétrécir */
+  }
+  .navbar-links .btn svg {
+    margin-right: 0; /* Pas de marge si le texte est caché */
+    font-size: 1.2rem; /* Taille d'icône cohérente */
+  }
+  .navbar-links .btn .button-nav-text { /* Cacher le texte des boutons */
+    display: none;
+  }
+}
+
+/* Ajustements pour écrans encore plus petits si nécessaire */
+@media (max-width: 400px) {
+  .navbar-brand .brand-text {
+    display: none; /* Cacher le texte de la marque sur très petits écrans */
+  }
+  .navbar-brand svg {
+    margin-right: 0;
+  }
+  .navbar-links {
+    gap: 2px; /* Espacement minimal */
+  }
+  .nav-link, .navbar-links .btn {
+    padding: 6px; /* Padding minimal pour les icônes */
+  }
 }

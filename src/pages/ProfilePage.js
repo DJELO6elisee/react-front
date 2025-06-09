@@ -1,7 +1,7 @@
 // src/pages/ProfilePage.js
 import React from 'react';
 import ProfileDisplay from '../components/profile/ProfileDisplay';
-import Navbar from '../components/layout/Navbar'; 
+// import Navbar from '../components/layout/Navbar'; 
 
 const ProfilePage = () => {
   return (

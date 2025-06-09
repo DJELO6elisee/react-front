@@ -1,7 +1,15 @@
 .chat-area {
-  flex-grow: 1;
   display: flex;
   flex-direction: column;
-  height: 100vh; /* Important pour que MessageList puisse scroller correctement */
   background-color: var(--chat-area-bg-main); /* Un fond légèrement différent du message list */
+  
+}
+
+.chat-area > .chat-header { 
+  flex-shrink: 0; /* Empêche le header de rétrécir */
+}
+
+.chat-area > .message-input-form {
+  flex-shrink: 0; /* Empêche la zone de saisie de rétrécir */
+  position: relative; /* Nécessaire si .file-preview-container est positionné absolument par rapport à lui */
 }

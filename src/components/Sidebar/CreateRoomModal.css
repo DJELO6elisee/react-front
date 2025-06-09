@@ -1,0 +1,61 @@
+/* src/components/Sidebar/CreateRoomModal.css */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* Au-dessus du reste */
+}
+
+.modal-content {
+  background-color: white;
+  padding: 25px 30px;
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  width: 100%;
+  max-width: 450px;
+  position: relative; /* Pour le bouton de fermeture */
+}
+
+.create-room-modal h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: var(--primary-color);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.4rem;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--icon-color-muted);
+  cursor: pointer;
+  padding: 5px;
+  line-height: 1;
+}
+.modal-close-btn:hover {
+  color: var(--text-color-primary);
+}
+
+/* Pour le textarea dans InputField */
+.input-field[type="textarea"] { /* Assurez-vous que votre InputField peut gérer type="textarea" */
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* Styles pour le sélecteur d'icône si InputField ne gère pas select directement */
+.create-room-modal .form-group label { display: block; margin-bottom: 8px; font-weight: 500; }
+.create-room-modal .input-wrapper { position: relative; }
+.create-room-modal .input-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--icon-color-muted); }
+.create-room-modal .input-field.has-icon { padding-left: 40px; }

@@ -1,23 +1,53 @@
-.sidebar-right {
-  width: 300px; /* Ajustez selon vos préférences */
-  background-color: var(--sidebar-bg); /* Peut être le même que sidebar-left ou légèrement différent */
-  border-left: 1px solid var(--border-color);
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  overflow-y: auto;
-}
+/* src/components/SidebarRight/SidebarRight.css */
 .sidebar-right.placeholder {
   display: flex;
+  flex-direction: column; /* Pour centrer le texte et le spinner */
   align-items: center;
   justify-content: center;
   text-align: center;
   padding: 20px;
   color: var(--text-color-secondary);
   font-style: italic;
+  flex-grow: 1; /* Pour qu'il remplisse l'espace si le contenu est un spinner */
+  height: 100%; /* S'assurer qu'il prend la hauteur pour le centrage */
 }
-/* Scrollbar customisée (similaire à sidebar-left) */
-.sidebar-right::-webkit-scrollbar { width: 6px; }
-.sidebar-right::-webkit-scrollbar-track { background: transparent; }
-.sidebar-right::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb-color); border-radius: 3px; }
-.sidebar-right::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover-color); }
+
+/* Styles pour les sections internes (SidebarSection, ChatAboutPanel, MediaGrid, etc.) */
+.sidebar-section {
+  padding: 15px 20px; /* Padding pour chaque section */
+  border-bottom: 1px solid var(--border-color-light);
+}
+.sidebar-section:last-child {
+  border-bottom: none; /* Pas de bordure pour la dernière section */
+}
+
+.sidebar-section .section-title { /* Titre dans SidebarSection.js */
+  font-size: 0.9rem; /* 14px */
+  font-weight: 600;
+  color: var(--text-color-primary);
+  margin: 0 0 12px 0; /* Espace sous le titre */
+}
+
+.empty-section-text { /* Utilisé dans MediaGrid, SharedFilesList */
+  font-size: 0.875rem;
+  color: var(--text-color-secondary);
+  text-align: center;
+  padding: 10px 0;
+}
+
+.see-all-button { /* Bouton "Voir tout" dans MediaGrid, SharedFilesList */
+  width: 100%;
+  padding: 8px;
+  margin-top: 10px;
+  background-color: var(--hover-bg-light);
+  border: 1px solid var(--border-color-light);
+  color: var(--text-color-secondary);
+  font-weight: 500;
+  border-radius: var(--border-radius-sm);
+  text-align: center;
+  transition: background-color 0.2s;
+}
+.see-all-button:hover {
+  background-color: var(--border-color-light);
+  color: var(--text-color-primary);
+}

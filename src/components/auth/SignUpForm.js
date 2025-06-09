@@ -50,7 +50,7 @@ const SignUpForm = () => {
         location: formData.location,
       };
       await auth.signup(signupData);
-      navigate('/profile/edit');
+      navigate('/login');
     } catch (err) {
       setError(err.message || "Échec de l'inscription. Veuillez réessayer.");
     }

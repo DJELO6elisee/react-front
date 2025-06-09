@@ -1,0 +1,27 @@
+/* src/pages/ExploreRoomsPage.css */
+.explore-rooms-page { max-width: 900px; margin: 20px auto; padding: 20px; }
+.explore-rooms-page h1 { display: flex; align-items: center; gap: 10px; color: var(--primary-color); margin-bottom: 25px; }
+.search-bar-container { margin-bottom: 30px; }
+.search-bar-container .form-group { margin-bottom: 0; } /* Si InputField a .form-group */
+
+.explore-room-list { list-style: none; padding: 0; }
+.explore-room-item {
+  background-color: white;
+  border: 1px solid var(--border-color-light);
+  border-radius: var(--border-radius-md);
+  padding: 20px;
+  margin-bottom: 15px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  transition: box-shadow 0.2s ease-in-out;
+}
+.explore-room-item:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.room-item-icon { font-size: 1.8rem; color: var(--primary-color); margin-top: 2px; }
+.room-item-info { flex-grow: 1; }
+.room-item-info h3 { margin-top: 0; margin-bottom: 5px; color: var(--text-color-primary); font-size: 1.1rem; }
+.room-item-info p { margin: 0; font-size: 0.9rem; color: var(--text-color-secondary); line-height: 1.5; }
+.room-item-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; white-space: nowrap; }
+.room-item-meta span { font-size: 0.85rem; color: var(--text-color-secondary); display: flex; align-items: center; gap: 5px; }
+.empty-state { text-align: center; color: var(--text-color-secondary); padding: 30px; font-style: italic; }
+.form-error-message { /* Style défini dans AuthForms.css ou à redéfinir */ }

@@ -1,0 +1,71 @@
+.user-search-container {
+  padding: 0 10px 10px 10px; /* Ajustez le padding */
+  border-top: 1px solid var(--border-color-light);
+  margin-top: 15px;
+}
+.user-search-container .list-title { /* Hérite de RoomList/ContactList ou style spécifique */
+    padding: 15px 10px 10px 10px; /* Ajusté pour le padding du conteneur */
+    /* ... (autres styles de list-title si besoin) */
+}
+.search-input-wrapper {
+    position: relative;
+    margin: 0 10px 10px 10px;
+}
+.search-input-wrapper .input-field { /* Si votre InputField est un div wrapper */
+    width: 100%;
+}
+.search-input-wrapper input[type="text"] { /* Cible l'input directement */
+    width: 100%; /* S'assurer qu'il prend toute la largeur */
+    padding-right: 30px; /* Espace pour le bouton clear */
+}
+.clear-search-btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--icon-color-muted);
+    cursor: pointer;
+    padding: 4px;
+}
+.clear-search-btn:hover {
+    color: var(--text-color-primary);
+}
+
+.loading-search-results, .search-error-message {
+  padding: 10px 10px;
+  font-size: 0.85rem;
+  color: var(--text-color-secondary);
+  text-align: center;
+}
+.search-error-message {
+    color: var(--danger-color, #cc0000);
+}
+
+.user-search-results-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 250px; /* Limiter la hauteur */
+  overflow-y: auto;
+}
+.user-search-result-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-radius: 4px;
+  margin-bottom: 2px;
+}
+.user-search-result-item:hover {
+  background-color: var(--background-color-hover-light);
+}
+.user-search-result-item .avatar-component-wrapper { /* Si votre Avatar a un wrapper */
+    margin-right: 10px;
+}
+.user-result-name {
+  font-size: 0.9rem;
+  color: var(--text-color-primary);
+}
