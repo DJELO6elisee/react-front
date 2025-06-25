@@ -9,16 +9,16 @@ import './SidebarRight.css';
 const SidebarRight = ({ activeRoom, loadingRoomDetails }) => {
   // Log pour inspecter la prop activeRoom et ses sous-propriétés media/attachments
   console.log('FRONTEND (SidebarRight) - Props reçues: activeRoom:', 
-              activeRoom ? JSON.stringify({ 
-                                id: activeRoom.id, 
-                                name: activeRoom.name, 
-                                mediaCount: activeRoom.media?.length, 
-                                attachmentsCount: activeRoom.attachments?.length,
-                                // Logguez les premières entrées pour voir leur structure
-                                firstMediaItem: activeRoom.media && activeRoom.media.length > 0 ? activeRoom.media[0] : null,
-                                firstAttachment: activeRoom.attachments && activeRoom.attachments.length > 0 ? activeRoom.attachments[0] : null
-                              }) : null, 
-              'loadingRoomDetails:', loadingRoomDetails);
+  activeRoom ? JSON.stringify({ 
+    id: activeRoom.id, 
+    name: activeRoom.name, 
+    mediaCount: activeRoom.media?.length, 
+    attachmentsCount: activeRoom.attachments?.length,
+    // Logguez les premières entrées pour voir leur structure
+    firstMediaItem: activeRoom.media && activeRoom.media.length > 0 ? activeRoom.media[0] : null,
+    firstAttachment: activeRoom.attachments && activeRoom.attachments.length > 0 ? activeRoom.attachments[0] : null
+  }) : null, 
+  'loadingRoomDetails:', loadingRoomDetails);
 
   if (loadingRoomDetails) {
     return (

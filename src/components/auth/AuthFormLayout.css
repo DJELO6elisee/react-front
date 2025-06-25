@@ -6,6 +6,7 @@
   min-height: 100vh;
   background-color: var(--chat-area-bg, #F3F4F6); /* Un fond neutre */
   padding: 20px;
+  box-sizing: border-box; /* Pour que le padding n'augmente pas la taille globale */
 }
 
 .auth-card {
@@ -43,6 +44,51 @@
   color: var(--text-color-primary);
   margin-bottom: 25px;
 }
+
+/* Style commun pour les messages d'alerte (erreur ou succès) */
+.form-alert-message { /* Classe parente si vous voulez un wrapper commun */
+  padding: 10px 15px;
+  margin-bottom: 20px; /* Espace avant le premier champ du formulaire */
+  border-radius: var(--border-radius-md, 8px);
+  font-size: 0.9rem;
+  text-align: left; /* Ou center si vous préférez */
+  border-width: 1px;
+  border-style: solid;
+}
+
+/* Style spécifique pour les messages d'erreur */
+.form-error-message {
+  padding: 10px 15px;
+  margin-bottom: 20px;
+  border-radius: var(--border-radius-md, 8px);
+  font-size: 0.9rem;
+  text-align: left;
+  
+  color: var(--danger-color-dark, #991B1B); /* Texte d'erreur plus sombre */
+  background-color: var(--danger-color-light, #FEE2E2); /* Fond d'erreur clair */
+  border: 1px solid var(--danger-color, #EF4444); /* Bordure d'erreur */
+}
+
+/* Style spécifique pour les messages de succès */
+.form-success-message {
+  padding: 10px 15px;
+  margin-bottom: 20px;
+  border-radius: var(--border-radius-md, 8px);
+  font-size: 0.9rem;
+  text-align: left;
+
+  color: var(--success-color-dark, #065F46); /* Texte de succès plus sombre */
+  background-color: var(--success-color-light, #D1FAE5); /* Fond de succès clair */
+  border: 1px solid var(--success-color, #10B981); /* Bordure de succès */
+}
+
+.field-error-text {
+  font-size: 0.8rem;
+  color: var(--danger-color, #EF4444);
+  text-align: left;
+  margin-top: 4px;
+}
+
 
 .auth-footer-text {
   margin-top: 25px;

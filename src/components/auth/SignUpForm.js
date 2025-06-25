@@ -45,17 +45,26 @@ const SignUpForm = () => {
         password: formData.password,
         age: formData.age ? parseInt(formData.age) : null,
         gender: formData.gender,
-        interests: formData.interests.split(',').map(i => i.trim()).filter(i => i),
+        interests: formData.interests.split(',').map(i => i.trim()).filter(i => i), // Assure que c'est un tableau de strings non vides
         relationshipIntent: formData.relationshipIntent,
         location: formData.location,
       };
-      await auth.signup(signupData);
-      navigate('/login');
+      // auth.signup renvoie maintenant l'objet utilisateur ou lance une erreur
+      const user = await auth.signup(signupData); 
+      if (user) { // Si l'inscription et la connexion implicite ont réussi
+        console.log('SIGNUP_FORM: Inscription réussie, redirection vers /chat');
+        navigate('/chat'); 
+      } else {
+        // Ce cas ne devrait pas arriver si auth.signup gère bien les erreurs
+        setError("Un problème est survenu lors de la finalisation de l'inscription.");
+      }
     } catch (err) {
+      console.error('SIGNUP_FORM ERREUR handleSubmit:', err);
       setError(err.message || "Échec de l'inscription. Veuillez réessayer.");
     }
     setLoading(false);
   };
+
 
   const genderOptions = [
     { value: '', label: 'Sélectionnez votre sexe' }, // Placeholder
@@ -85,7 +94,7 @@ const SignUpForm = () => {
       <InputField id="signup-email" label="Email" type="email" value={formData.email} onChange={handleChange} icon={<FiMail />} required />
       <InputField id="signup-password" label="Mot de passe" type="password" value={formData.password} onChange={handleChange} icon={<FiLock />} required />
       <InputField id="signup-confirmPassword" label="Confirmer le mot de passe" type="password" value={formData.confirmPassword} onChange={handleChange} icon={<FiLock />} required />
-
+ 
       {/* Ce titre prendra toute la largeur grâce à sa classe */}
       <h3 className="form-section-title full-width-grid-item">Informations de profil (optionnel)</h3>
 

@@ -5,7 +5,7 @@ import InputField from '../common/InputField'; // Si vous avez un composant Inpu
 import { FiSearch, FiX } from 'react-icons/fi';
 import './UserSearch.css'; // À créer
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_URL = process.env.REACT_APP_API_URL || 'https://chatgather.p6-groupeb.com/api';
 
 const UserSearch = ({ onSelectUser }) => {
   const [searchTerm, setSearchTerm] = useState('');

@@ -9,7 +9,7 @@ import LoadingSpinner from '../components/common/LoadingSpinner';
 import { FiSearch, FiMessageSquare, FiUsers, FiLogIn } from 'react-icons/fi';
 import './ExploreRoomsPage.css';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_URL = process.env.REACT_APP_API_URL || 'https://chatgather.p6-groupeb.com/api';
 
 const ExploreRoomsPage = () => {
   const [allRooms, setAllRooms] = useState([]);
@@ -47,23 +47,35 @@ const ExploreRoomsPage = () => {
 
   const handleJoinRoom = async (roomId) => {
     if (!currentUser) {
-      navigate('/login', { state: { from: `/explore-rooms?roomId=${roomId}` } }); // Redirige et passe roomId pour potentiellement rejoindre après connexion
+      navigate('/login', { state: { from: `/explore-rooms?roomId=${roomId}` } });
       return;
     }
     setJoinLoading(roomId);
     setError('');
     try {
       const response = await axios.post(`${API_URL}/chat/rooms/${roomId}/join`);
-      alert(response.data.message || "Salon rejoint !");
+      // alert(response.data.message || "Salon rejoint !"); // Peut-être utiliser un toast/snackbar plus tard
+
+      // Mettre à jour l'état local pour refléter que l'utilisateur est maintenant membre
+      setAllRooms(prevRooms => 
+        prevRooms.map(room => 
+          room.id === roomId ? { ...room, is_member: true, member_count: (room.member_count || 0) + 1 } : room
+          // Augmenter member_count est optionnel ici, le backend le fera de toute façon.
+          // L'important est is_member: true
+        )
+      );
       
-      navigate(`/chat`); 
+      // Optionnel: léger délai avant de naviguer pour que l'utilisateur voie le changement de bouton
+      setTimeout(() => {
+          navigate(`/chat?roomId=${roomId}`); // Naviguer vers le chat, et potentiellement vers le salon rejoint
+      }, 300); // 300ms de délai
+
     } catch (err) {
       console.error("Erreur pour rejoindre le salon:", err.response?.data?.message || err.message);
       setError(err.response?.data?.message || "Impossible de rejoindre le salon.");
     }
     setJoinLoading(null);
   };
-
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };

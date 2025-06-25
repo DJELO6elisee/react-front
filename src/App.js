@@ -13,6 +13,8 @@ import ExploreRoomsPage from './pages/ExploreRoomsPage';
 import Navbar from './components/layout/Navbar';
 import ProtectedRoute from './components/layout/ProtectedRoute';
 import LoadingSpinner from './components/common/LoadingSpinner';
+import ForgotPasswordPage from './pages/ForgotPasswordPage'; 
+import ResetPasswordPage from './pages/ResetPasswordPage';   
 import './App.css'; // Importation des styles globaux
 
 // Layout pour les pages qui ont la Navbar et le layout spécifique du chat (ChatPage)
@@ -78,13 +80,13 @@ function App() {
           <Route element={<AuthLayout />}>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignUpPage />} />
-            {/* Ajoutez ici d'autres routes d'auth comme /forgot-password si besoin */}
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} /> 
+            <Route path="/reset-password/:token" element={<ResetPasswordPage />} /> 
           </Route>
 
           {/* Routes protégées avec le layout du Chat */}
           <Route element={<ProtectedRoute><MainChatLayout /></ProtectedRoute>}>
             <Route path="/chat" element={<ChatPage />} />
-            {/* Si d'autres pages doivent utiliser le layout à 3 colonnes, ajoutez-les ici */}
           </Route>
           
           {/* Routes protégées avec le layout Général (Navbar + contenu simple) */}

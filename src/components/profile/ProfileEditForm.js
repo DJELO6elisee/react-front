@@ -63,9 +63,10 @@ const ProfileEditForm = () => {
     try {
       const updatedData = {
         username: formData.username,
+        email: formData.email,
         age: formData.age ? parseInt(formData.age) : null,
         gender: formData.gender,
-        interests: formData.interests, 
+        interests: formData.interests.split(',').map(i => i.trim()).filter(i => i), 
         relationshipIntent: formData.relationshipIntent,
         location: formData.location,
         avatarUrl: formData.avatarUrl,

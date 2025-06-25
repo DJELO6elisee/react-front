@@ -11,8 +11,8 @@ import { Navigate } from 'react-router-dom';
 import { isURL } from '../utils/url'; 
 import '../App.css';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || 'http://localhost:5000';
+const API_URL = process.env.REACT_APP_API_URL || 'https://chatgather.p6-groupeb.com/api';
+const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || 'https://chatgather.p6-groupeb.com';
 
 function ChatPage() {
   const { currentUser, token } = useAuth();
@@ -232,6 +232,7 @@ function ChatPage() {
         }
       });
 
+      
       socketRef.current.on('roomUsers', (data) => {
         console.log('FRONTEND (Socket "roomUsers"): Reçu liste pour salon', data.roomId, 'Nombre:', data.users?.length || 0);
         if (data.roomId === activeRoomIdRef.current) {
@@ -284,6 +285,116 @@ function ChatPage() {
             }));
         }
       });
+      // Listener pour messageDeleted
+      socketRef.current.on('messageDeleted', ({ messageId, roomId }) => {
+        console.log(`FRONTEND (Socket "messageDeleted"): Message ID ${messageId} dans salon ${roomId} à supprimer.`);
+        
+        let newLastMessageForRoomState = null; // Pour stocker le nouveau dernier message pour l'état des salons
+
+        setMessagesByRoom(prevMessagesByRoom => {
+          const updatedMessagesByRoom = { ...prevMessagesByRoom };
+          if (updatedMessagesByRoom[roomId] && Array.isArray(updatedMessagesByRoom[roomId])) {
+            const originalMessages = updatedMessagesByRoom[roomId];
+            updatedMessagesByRoom[roomId] = originalMessages.filter(msg => msg.id !== messageId);
+            
+            if (updatedMessagesByRoom[roomId].length > 0) {
+              newLastMessageForRoomState = updatedMessagesByRoom[roomId][updatedMessagesByRoom[roomId].length - 1];
+            }
+            // console.log(`FRONTEND (setMessagesByRoom "messageDeleted"): Messages pour ${roomId} après suppression (count): ${updatedMessagesByRoom[roomId].length}.`);
+          }
+          return updatedMessagesByRoom;
+        });
+
+        // Mettre à jour la liste des salons si le message supprimé était le dernier
+        // Utiliser allRoomsRef.current pour trouver le salon concerné
+        const roomData = allRoomsRef.current.find(r => r.id === roomId);
+        if (roomData && roomData.last_message && roomData.last_message.id === messageId) {
+          // console.log(`FRONTEND (messageDeleted): Le message supprimé était le dernier du salon ${roomId}. Mise à jour de la preview.`);
+          
+          const updateListWithNewLastMessage = (prevList) => {
+            const currentList = Array.isArray(prevList) ? prevList : [];
+            return currentList.map(r => {
+              if (r.id === roomId) {
+                // Utiliser la variable newLastMessageForRoomState qui a été déterminée dans le setMessagesByRoom
+                return { 
+                  ...r, 
+                  last_message: newLastMessageForRoomState ? {
+                    text: newLastMessageForRoomState.text,
+                    media_url: newLastMessageForRoomState.media_url,
+                    created_at: newLastMessageForRoomState.created_at,
+                    sender_username: newLastMessageForRoomState.sender_username
+                    // Assurez-vous que newLastMessageForRoomState contient tous les champs nécessaires pour last_message
+                  } : null,
+                  updated_at: newLastMessageForRoomState ? newLastMessageForRoomState.created_at : r.created_at 
+                };
+              }
+              return r;
+            }).sort((a,b) => new Date(b.updated_at || 0) - new Date(a.updated_at || 0));
+          };
+
+          if (roomData.isDirect || roomData.room_type === 'direct') {
+              setDirectMessageRooms(updateListWithNewLastMessage);
+          } else {
+              setGroupRooms(updateListWithNewLastMessage);
+          }
+        }
+      });
+
+      socketRef.current.on('userLeftRoom', (data) => { // data: { userId, username, roomId, message }
+        console.log(`FRONTEND (Socket "userLeftRoom"): ${data.username} a quitté le salon ${data.roomId}.`);
+        
+        // Si l'utilisateur actuel est celui qui a quitté (ce qui ne devrait pas arriver ici
+        // car le client qui quitte gère sa propre redirection/màj UI),
+        // mais utile si un autre de ses appareils était connecté.
+        if (data.userId === currentUser?.id && data.roomId === activeRoomIdRef.current) {
+          // L'utilisateur actuel a quitté ce salon depuis un autre onglet/appareil
+          // On pourrait le rediriger ou désactiver le salon.
+          // Pour l'instant, on met à jour la liste des salons.
+          setActiveRoomId(null); // Désélectionner le salon
+        }
+
+        // Mettre à jour le nombre de membres dans la liste des salons affichée
+        const roomToUpdate = allRoomsRef.current.find(r => r.id === data.roomId);
+        if (roomToUpdate) {
+          const listUpdater = (prevList) => {
+             const currentList = Array.isArray(prevList) ? prevList : [];
+             return currentList.map(r => {
+                 if (r.id === data.roomId) {
+                     // La nouvelle liste de participants sera envoyée par 'roomUsers'
+                     // Ici, on peut juste décrémenter si member_count est fiable,
+                     // ou attendre 'roomUsers'. Pour la simplicité, on attend 'roomUsers'.
+                     // Ou, si on veut un effet immédiat sur member_count:
+                     const newMemberCount = r.participants ? r.participants.filter(p => p.id !== data.userId).length : (r.member_count || 1) -1;
+                     return { ...r, member_count: Math.max(0, newMemberCount) };
+                 }
+                 return r;
+             });
+          };
+          if (roomToUpdate.isDirect || roomToUpdate.room_type === 'direct') {
+             // Ne devrait pas arriver car on ne quitte pas les DMs de cette façon
+          } else {
+             setGroupRooms(listUpdater);
+          }
+        }
+
+        // Optionnel : afficher un message système dans le chat (si c'est le salon actif)
+        if (data.roomId === activeRoomIdRef.current && data.message) {
+          const systemMessage = {
+            id: `system-${Date.now()}`,
+            room_id: data.roomId,
+            text: data.message,
+            sender_id: 'System',
+            sender_username: 'System',
+            created_at: new Date().toISOString(),
+            message_type: 'system_notification',
+          };
+          setMessagesByRoom(prev => ({
+            ...prev,
+            [data.roomId]: [...(prev[data.roomId] || []), systemMessage],
+          }));
+        }
+      });
+    
 
       return () => { 
         if (socketRef.current) {
@@ -433,34 +544,76 @@ function ChatPage() {
   };
 
   const handleSendMessage = async (messageData) => {
-    console.log('FRONTEND (handleSendMessage): Tentative. Données:', JSON.stringify(messageData, null, 2));
+    // messageData contient maintenant:
+    // { text, mediaUrl, fileName, fileType, isEphemeral, messageType }
+    // venant de MessageInput.js
+    console.log('FRONTEND (handleSendMessage): Tentative. Données reçues de MessageInput:', JSON.stringify(messageData, null, 2));
+    
     const currentRoomId = activeRoomIdRef.current;
-    if (!currentRoomId || !currentUser || (!messageData.text && !messageData.mediaUrl)) {
-      console.warn("FRONTEND (handleSendMessage): Conditions non remplies ou message vide.");
-      alert("Impossible d'envoyer le message."); return;
+    if (!currentRoomId || !currentUser) {
+      console.warn("FRONTEND (handleSendMessage): Conditions non remplies (salon/utilisateur).");
+      alert("Impossible d'envoyer le message."); 
+      return;
     }
-    let { text: finalText, mediaUrl: finalMediaUrl, fileName: finalFileName, fileType: finalFileType } = messageData;
 
+    // Déstructurer avec des valeurs par défaut pour s'assurer que les champs existent
+    let { 
+      text: finalText = null, // Assurer null si undefined
+      mediaUrl: finalMediaUrl = null,
+      fileName: finalFileName = null,
+      fileType: finalFileType = null,
+      isEphemeral: finalIsEphemeral = false, // Important: prendre la valeur de messageData
+      messageType: finalMessageType = 'standard' // Important: prendre la valeur de messageData
+    } = messageData;
+
+    // Logique de détection de lien (si aucun média n'est déjà défini par MessageInput)
+    // Cette logique s'appliquera si messageData.mediaUrl était initialement null
+    // et que le texte est une URL. Elle pourrait potentiellement écraser messageType si on veut.
     if (!finalMediaUrl && finalText && isURL(finalText.trim())) {
       const urlText = finalText.trim(); 
+      console.log('FRONTEND (handleSendMessage): Texte détecté comme URL, traitement en tant que lien.');
       finalMediaUrl = urlText; 
-      finalFileType = 'link';
-      try { finalFileName = new URL(urlText).hostname; } 
-      catch { finalFileName = urlText.length > 50 ? urlText.substring(0, 47) + "..." : urlText; }
-      console.log('FRONTEND (handleSendMessage): URL traitée comme média de type lien.');
+      finalFileType = 'link'; // Le type est maintenant 'link'
+      finalMessageType = 'link'; // Le messageType aussi, pour cohérence
+      try { 
+        finalFileName = new URL(urlText).hostname; 
+      } catch { 
+        finalFileName = urlText.length > 50 ? urlText.substring(0, 47) + "..." : urlText; 
+      }
+      // Optionnel: Si une URL est détectée et traitée comme lien, faut-il vider finalText?
+      // Si Linkify s'en occupe dans MessageItem, on peut le laisser.
+      // finalText = null; // Si vous voulez que le "média lien" soit le seul contenu.
+    }
+    
+    // Vérification finale après tout traitement: on doit avoir soit du texte, soit un mediaUrl
+    if ((!finalText || finalText.trim() === '') && !finalMediaUrl) {
+        console.warn("FRONTEND WARN (handleSendMessage): Message vide après traitement (pas de texte pertinent, pas de média).");
+        return;
     }
 
-    const payloadToApi = { text: finalText, mediaUrl: finalMediaUrl, fileName: finalFileName, fileType: finalFileType };
-    console.log('FRONTEND (handleSendMessage): Payload pour API:', JSON.stringify(payloadToApi, null, 2));
+    const payloadToApi = { 
+      text: finalText,          // Peut être null si média seul
+      mediaUrl: finalMediaUrl,  // Peut être null si texte seul
+      fileName: finalFileName,  // Sera null si pas de fichier/lien
+      fileType: finalFileType,  // Sera null si pas de fichier/lien
+      isEphemeral: finalIsEphemeral, // Valeur déterminée par MessageInput (pour notes vocales en DM) ou par défaut
+      messageType: finalMessageType // Valeur déterminée par MessageInput ou par détection de lien, ou 'standard'
+    };
+    console.log('FRONTEND (handleSendMessage): Payload final pour API:', JSON.stringify(payloadToApi, null, 2));
+
     try {
       const response = await axios.post(`${API_URL}/chat/rooms/${currentRoomId}/messages`, payloadToApi);
       console.log('FRONTEND (handleSendMessage): Message posté via API. Réponse:', JSON.stringify(response.data, null, 2));
+      // L'UI est mise à jour via l'événement Socket.IO 'message'
     } catch (error) {
-      const errText = error.response?.data?.message || (error.response?.data?.errors ? JSON.stringify(error.response.data.errors) : error.message) || "Erreur.";
-      console.error("FRONTEND ERREUR (handleSendMessage):", errText, error.response);
-      alert("Échec envoi: " + errText);
+      const errText = error.response?.data?.message || 
+                      (error.response?.data?.errors ? JSON.stringify(error.response.data.errors) : error.message) || 
+                      "Erreur inconnue lors de l'envoi.";
+      console.error("FRONTEND ERREUR (handleSendMessage): Échec de l'appel API -", errText, error.response || error);
+      alert("Échec de l'envoi du message: " + errText);
     }
   };
+
   
   const handleInitiateChatWithUser = async (targetUser) => {
     if(!currentUser || !targetUser || currentUser.id === targetUser.id) return;
@@ -549,6 +702,45 @@ function ChatPage() {
     }
   };
 
+  const handleLeaveRoom = async (roomIdToLeave, roomName) => {
+     if (!roomIdToLeave) return;
+     console.log(`FRONTEND (handleLeaveRoom): Tentative de quitter le salon ${roomName} (ID: ${roomIdToLeave})`);
+
+     // Demander confirmation
+     if (!window.confirm(`Êtes-vous sûr de vouloir quitter le groupe "${roomName}" ?`)) {
+         return;
+     }
+
+     try {
+         await axios.delete(`${API_URL}/chat/rooms/${roomIdToLeave}/leave`); // Ou .post si vous avez utilisé POST
+         console.log(`FRONTEND (handleLeaveRoom): Requête pour quitter le salon ${roomIdToLeave} réussie.`);
+
+         // Mettre à jour l'UI pour l'utilisateur qui a quitté :
+         // 1. Retirer le salon de la liste
+         setGroupRooms(prev => prev.filter(room => room.id !== roomIdToLeave));
+         // Si c'était un DM (ne devrait pas être quitté comme ça, mais par sécurité)
+         setDirectMessageRooms(prev => prev.filter(room => room.id !== roomIdToLeave));
+
+         // 2. Si le salon quitté était actif, désélectionner
+         if (activeRoomId === roomIdToLeave) {
+             setActiveRoomId(null);
+             setActiveRoomDetails(null);
+             setMessagesByRoom(prev => {
+                 const newState = {...prev};
+                 delete newState[roomIdToLeave]; // Optionnel: supprimer les messages du salon quitté de l'état local
+                 return newState;
+             });
+         }
+         // Optionnel: afficher une notification "Vous avez quitté le salon X"
+         alert(`Vous avez quitté le salon "${roomName}".`);
+
+     } catch (error) {
+         const errorMessage = error.response?.data?.message || error.message || "Erreur inconnue.";
+         console.error(`FRONTEND ERREUR (handleLeaveRoom) pour salon ${roomIdToLeave}:`, errorMessage, error.response);
+         alert(`Impossible de quitter le salon: ${errorMessage}`);
+     }
+  };
+
   const currentActiveRoomForDisplay = activeRoomDetails || allRoomsRef.current.find(r => r.id === activeRoomId);
   const currentMessagesToDisplay = messagesByRoom[activeRoomId] || [];
   const activeRoomTypersArray = activeRoomId ? Object.keys(typingUsers[activeRoomId] || {}) : [];
@@ -595,6 +787,7 @@ function ChatPage() {
         isMobile={isMobile}
         onShowSidebarList={handleShowSidebarList}
         onShowDetails={handleToggleRoomDetails}
+        onLeaveRoom={handleLeaveRoom}
       />
       {((!isMobile && isDesktopSidebarRightVisible) || (isMobile && mobileView === 'details')) && currentActiveRoomForDisplay && (
         <>

@@ -215,3 +215,105 @@
   background-color: rgba(0,0,0,0.06);
   text-decoration: underline;
 }
+
+/* Dans MessageItem.css */
+.message-media-video-container {
+  /* background-color: rgba(0,0,0,0.05); Si vous voulez un fond */
+  padding: 0; /* Ou un petit padding si vous avez un fond */
+  border-radius: 8px; /* Doit correspondre à .message-media-container */
+  overflow: hidden; /* Pour que la vidéo respecte le radius */
+  max-width: 400px; /* Limiter la largeur de la vidéo */
+}
+.message-media-video {
+  width: 100%;
+  max-height: 300px; /* Limiter la hauteur */
+  display: block; /* Pour éviter l'espace en dessous */
+  border-radius: 8px; /* Si le conteneur n'a pas overflow:hidden */
+}
+.message-media-video-container .download-link { /* Si vous ajoutez ce lien */
+  display: block;
+  text-align: center;
+  font-size: 0.8em;
+  padding-top: 5px;
+  color: inherit;
+  opacity: 0.7;
+}
+
+.message-media-audio-container {
+  display: flex; /* Aligne l'icône (si présente) et le lecteur */
+  align-items: center;
+  padding: 8px 5px; /* Un peu de padding pour ne pas coller aux bords de la bulle */
+  /* background-color: rgba(0,0,0,0.03); Optionnel: léger fond si besoin */
+  /* border-radius: 8px; Inutile si .message-media-container a overflow:hidden */
+}
+
+/* Styles pour la balise audio elle-même */
+.message-media-audio {
+  width: 100%;         /* Fait en sorte que le lecteur prenne la largeur disponible dans son conteneur */
+  min-width: 200px;    /* Donne une largeur minimale pour que les contrôles s'affichent */
+  max-width: 300px;    /* Empêche qu'il ne devienne trop large sur de grandes bulles */
+  height: 40px;        /* Hauteur typique pour un lecteur audio compact avec contrôles */
+                       /* Certains navigateurs ont une hauteur fixe, d'autres peuvent s'adapter. */
+                       /* Vous devrez peut-être ajuster cela. */
+  outline: none;       /* Supprimer le focus outline par défaut si vous n'en voulez pas */
+}
+
+/* Si vous avez une icône à côté du lecteur (FiMic ou FiVolume2) */
+.message-media-audio-container svg {
+  margin-right: 8px;
+  flex-shrink: 0; /* Empêche l'icône de rétrécir si le lecteur prend de la place */
+}
+
+
+/* Pour les autres types de médias, assurez-vous qu'ils sont bien stylés aussi */
+.message-media-image {
+  max-width: 100%;
+  max-height: 320px;
+  object-fit: cover;
+  cursor: pointer;
+  display: block;
+  border-radius: 8px; /* Si .message-media-container n'a pas overflow:hidden */
+}
+
+.message-media-video-container {
+  border-radius: 8px; 
+  overflow: hidden;   
+  max-width: 100%;    
+}
+.message-media-video {
+  width: 100%;        
+  max-height: 300px;  
+  display: block;     
+}
+
+.message-media-file,
+.message-media-link-standalone {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  /* background-color: var(--background-color-tertiary-light); */
+  /* border: 1px solid var(--border-color-light); */
+  border-radius: 8px;
+  text-decoration: none;
+  color: inherit; 
+  gap: 10px;
+  transition: background-color 0.2s, opacity 0.2s;
+  font-size: 0.9em;
+}
+.message-media-file:hover,
+.message-media-link-standalone:hover {
+  /* background-color: var(--background-color-hover-light); */
+  opacity: 0.8;
+}
+.message-media-file span,
+.message-media-link-standalone span { /* span est pour le nom du fichier/lien */
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.message-media-file svg,
+.message-media-link-standalone svg {
+    min-width: 16px; 
+    flex-shrink: 0;
+}

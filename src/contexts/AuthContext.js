@@ -4,7 +4,7 @@ import axios from 'axios'; // Importer axios
 // import { usersData } from '../data/mockData'; // Plus utilisé pour l'initialisation
 
 // L'URL de base de votre API backend
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_URL = process.env.REACT_APP_API_URL || 'https://chatgather.p6-groupeb.com/api';
 
 export const AuthContext = createContext(null);
 
@@ -63,8 +63,8 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
       // Tenter d'extraire le message d'erreur du backend
       const errorMessage = error.response?.data?.message || 
-                           (error.response?.data?.errors ? error.response.data.errors[0].msg : error.message) ||
-                           "Échec de l'inscription.";
+      (error.response?.data?.errors ? error.response.data.errors[0].msg : error.message) ||
+      "Échec de l'inscription.";
       throw new Error(errorMessage);
     }
   };
@@ -114,8 +114,8 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       setLoading(false);
       const errorMessage = error.response?.data?.message ||
-                           (error.response?.data?.errors ? error.response.data.errors[0].msg : error.message) ||
-                           "Échec de la mise à jour du profil.";
+      (error.response?.data?.errors ? error.response.data.errors[0].msg : error.message) ||
+      "Échec de la mise à jour du profil.";
       throw new Error(errorMessage);
     }
   };

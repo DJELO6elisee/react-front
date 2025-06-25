@@ -105,6 +105,59 @@
   color: var(--primary-color);
 }
 
+.room-members-or-status.online {
+  color: var(--success-text-dark, #16a34a); /* Couleur pour statut "En ligne" */
+  font-weight: 500;
+}
+
+.typing-indicator.with-meta { /* Si room-members-or-status est aussi affiché */
+  margin-left: 10px; /* Ajoute un peu d'espace */
+  padding-left: 10px;
+  border-left: 1px solid var(--border-color-extra-light, #e0e0e0); /* Séparateur léger */
+}
+
+.action-btn.leave-room-btn svg {
+  /* Si vous voulez une couleur spécifique pour l'icône quitter, par exemple rouge au survol */
+  /* color: var(--icon-color-muted); */
+}
+.action-btn.leave-room-btn:hover svg {
+  /* color: var(--danger-color); */
+}
+
+/* Styles pour le menu déroulant "Plus d'options" */
+.options-menu-container {
+  position: relative;
+  display: inline-block;
+}
+
+.options-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 5px); /* Juste en dessous du bouton */
+  background-color: var(--dropdown-bg, white);
+  border: 1px solid var(--border-color, #ccc);
+  border-radius: var(--border-radius-md, 6px);
+  box-shadow: var(--shadow-lg, 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05));
+  z-index: 100;
+  min-width: 180px; /* Largeur minimale du menu */
+  padding: 5px 0;
+}
+
+.options-dropdown button {
+  display: block;
+  width: 100%;
+  padding: 8px 15px;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--text-color-primary);
+}
+
+.options-dropdown button:hover {
+  background-color: var(--background-color-hover-light, #f0f0f0);
+}
 /* La visibilité des boutons .mobile-only est gérée par App.css */
 /* Si vous avez besoin de cacher des boutons spécifiques sur des tailles d'écran spécifiques,
    vous pouvez ajouter des classes comme .hide-on-small-mobile et les définir dans les media queries de App.css */

@@ -1,13 +1,13 @@
 // src/components/ChatArea/MessageItem.js
-import React from 'react';
+import React, { useRef } from 'react';
 import Avatar from '../common/Avatar';
-import Linkify from 'linkify-react'; // <<<--- IMPORTER LINKIFY
+import Linkify from 'linkify-react'; 
 import './MessageItem.css';
 import { format, isToday, isYesterday } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { FiFileText, FiDownload, FiLink /*, FiImage, FiPlayCircle, FiVolume2 */ } from 'react-icons/fi';
-
-// La fonction isURL a été supprimée car non utilisée directement ici si file_type gère les liens
+// Ré-inclusion des icônes au cas où vous voudriez les utiliser pour des indicateurs.
+// FiImage est utilisé pour l'icône img par défaut du navigateur si l'image ne charge pas.
+import { FiFileText, FiDownload, FiLink, FiMic, FiVolume2 } from 'react-icons/fi';
 
 const formatDateTimestamp = (timestamp) => {
   if (!timestamp) return '';
@@ -21,67 +21,162 @@ const formatDateTimestamp = (timestamp) => {
   return format(date, 'dd MMM HH:mm', { locale: fr });
 };
 
-const MessageItem = ({ message, sender, isOwnMessage }) => {
+const MessageItem = ({ 
+    message, 
+    sender, 
+    isOwnMessage, 
+    socket,        
+    isDirectMessageRoom 
+}) => {
   if (!sender) {
     sender = { id: 'unknown', name: 'Utilisateur inconnu', avatarUrl: '' };
   }
 
+  const audioPlayerRef = useRef(null);
+
+  const handleAudioEnded = () => {
+    console.log(`MessageItem (handleAudioEnded): Déclencheur pour message ID: ${message?.id}`);
+    console.log(`MessageItem (handleAudioEnded): Détails - is_ephemeral: ${message?.is_ephemeral}, message_type: ${message?.message_type}, isDirectMessageRoom: ${isDirectMessageRoom}, isOwnMessage: ${isOwnMessage}, socketConnected: ${socket?.connected}`);
+
+    // Conditions pour supprimer la note vocale après lecture :
+    // 1. Le message doit exister et avoir les propriétés nécessaires
+    // 2. Il doit être marqué comme éphémère (is_ephemeral: true ou 1)
+    // 3. Son type doit être 'voice_note'
+    // 4. Le salon doit être un Message Direct
+    // 5. L'utilisateur actuel ne doit PAS être l'expéditeur (seul le destinataire peut supprimer en écoutant)
+    // 6. Le socket doit être valide et connecté
+    if (
+        message &&                          // S'assurer que l'objet message existe
+        message.id &&                       // S'assurer qu'il a un ID
+        message.room_id &&                  // S'assurer qu'il a un room_id
+        (message.is_ephemeral === true || message.is_ephemeral === 1) && // Gérer booléen ou entier de la BDD
+        message.message_type === 'voice_note' &&
+        isDirectMessageRoom === true &&     // Explicitement true
+        !isOwnMessage &&                    // L'utilisateur actuel est le destinataire
+        socket && socket.connected
+    ) {
+        console.log(`MessageItem (handleAudioEnded): Conditions REMPLIES pour message ID: ${message.id}. Émission de 'markVoiceNotePlayed'.`);
+        socket.emit('markVoiceNotePlayed', { 
+            messageId: message.id, 
+            roomId: message.room_id // Utiliser room_id car c'est ce que le backend et les messages contiennent souvent
+        });
+    } else {
+        console.log(`MessageItem (handleAudioEnded): Conditions NON remplies pour message ID: ${message?.id}. Aucune action de suppression.`);
+    }
+  };
+
   const getMediaContent = (msg) => {
+    // console.log('MessageItem - getMediaContent - Entrée avec msg:', JSON.stringify(msg, null, 2));
     if (!msg.media_url) return null;
 
-    // Utiliser msg.file_name si fourni par le backend, sinon extraire de media_url
     const fileName = msg.file_name || msg.media_url.substring(msg.media_url.lastIndexOf('/') + 1);
     const decodedFileName = decodeURIComponent(fileName);
-    const fileType = msg.file_type || ''; // Utiliser file_type s'il vient du backend
+    const fileType = msg.file_type || ''; 
+    const messageTypeFromMsg = msg.message_type || 'standard';
+    
+    // console.log(`MessageItem - getMediaContent - Détails: fileName='${decodedFileName}', fileType='${fileType}', messageType='${messageTypeFromMsg}', media_url='${msg.media_url}'`);
 
-    // 1. Gérer les liens explicitement marqués avec file_type: 'link'
     if (fileType === 'link') {
-      let linkText = decodedFileName; // Pour les liens, fileName est souvent le hostname ou l'URL tronquée
-      // Si decodedFileName est l'URL complète et que vous voulez la tronquer:
-      // if (linkText.startsWith('http') && linkText.length > 50) linkText = linkText.substring(0, 47) + "...";
+      let linkText = decodedFileName || msg.media_url;
+      if (linkText.length > 60) linkText = linkText.substring(0, 57) + "...";
       return (
         <a href={msg.media_url} target="_blank" rel="noopener noreferrer" className="message-media-link-standalone">
-          <FiLink style={{marginRight: '5px'}} /> {linkText}
+          <FiLink style={{marginRight: '5px', flexShrink: 0}} /> {linkText}
         </a>
       );
     }
 
-    // 2. Gérer les fichiers uploadés (images, PDF, etc.)
-    if (fileType.startsWith('image/') || /\.(jpeg|jpg|gif|png|webp|bmp)$/i.test(msg.media_url)) {
-      return <img src={msg.media_url} alt={decodedFileName} className="message-media-image" onClick={() => window.open(msg.media_url, '_blank')} />;
+    if (fileType.startsWith('image/')) {
+      // console.log('MessageItem - getMediaContent: Rendu comme IMAGE');
+      return (
+        <img 
+          src={msg.media_url} 
+          alt={decodedFileName || "Média image"} 
+          className="message-media-image" 
+          onClick={() => window.open(msg.media_url, '_blank')} 
+          title={`Voir : ${decodedFileName || 'Image'}`}
+          // onError={(e) => { e.target.style.display='none'; /* Ou afficher un placeholder */}} // Optionnel
+        />
+      );
     }
-    if (fileType === 'application/pdf' || /\.(pdf)$/i.test(msg.media_url)) {
+
+    if (fileType.startsWith('video/')) {
+      // console.log('MessageItem - getMediaContent: Rendu comme VIDEO pour fileType:', fileType);
+      return (
+        <div className="message-media-video-container">
+          <video controls src={msg.media_url} className="message-media-video" preload="metadata">
+            Votre navigateur ne supporte pas la lecture de vidéos. 
+            <a href={msg.media_url} download={decodedFileName}>Télécharger la vidéo ({decodedFileName})</a>
+          </video>
+        </div>
+      );
+    }
+    
+    if (fileType.startsWith('audio/') || messageTypeFromMsg === 'voice_note') {
+      // console.log('MessageItem - getMediaContent: Rendu comme AUDIO/VOICE_NOTE pour fileType:', fileType);
+      return (
+         <div className="message-media-audio-container">
+            {messageTypeFromMsg === 'voice_note' && (
+                <FiMic size={20} style={{ 
+                    marginRight: '8px', 
+                    color: isOwnMessage ? 'var(--text-color-light-on-dark-bg, #e0e0e0)' : 'var(--primary-color)'
+                }}/>
+            )}
+            {/* Si ce n'est pas une note vocale mais un fichier audio, on pourrait utiliser FiVolume2 */}
+            {messageTypeFromMsg !== 'voice_note' && fileType.startsWith('audio/') && (
+                <FiVolume2 size={20} style={{
+                    marginRight: '8px',
+                    color: isOwnMessage ? 'var(--text-color-light-on-dark-bg, #e0e0e0)' : 'var(--primary-color)'
+                }}/>
+            )}
+            <audio 
+                ref={audioPlayerRef}
+                controls 
+                src={msg.media_url} 
+                className="message-media-audio" 
+                preload="metadata"
+                onEnded={handleAudioEnded}
+            >
+                Votre navigateur ne supporte pas la lecture audio.
+            </audio>
+        </div>
+      );
+    }
+
+    if (fileType === 'application/pdf') {
+      // console.log('MessageItem - getMediaContent: Rendu comme PDF');
       return (
         <a href={msg.media_url} target="_blank" rel="noopener noreferrer" download={decodedFileName} className="message-media-file">
-          <FiFileText /> <span>{decodedFileName}</span> <FiDownload />
+          <FiFileText style={{marginRight: '5px', flexShrink: 0}} /> <span>{decodedFileName}</span> <FiDownload style={{marginLeft: 'auto', flexShrink: 0}}/>
         </a>
       );
     }
-    // TODO: Ajouter ici la logique pour les vidéos et l'audio si nécessaire, basée sur fileType ou extension
-    // if (fileType.startsWith('video/') || /\.(mp4|webm|mov)$/i.test(msg.media_url)) { ... }
-    // if (fileType.startsWith('audio/') || /\.(mp3|wav)$/i.test(msg.media_url)) { ... }
 
-
-    // 3. Fallback pour d'autres types de fichiers uploadés (non image/pdf/lien/vidéo/audio)
-    // Cette condition s'applique si media_url est présent mais ne correspond à aucun des types ci-dessus.
-    // On suppose que c'est un fichier téléchargeable.
+    // Fallback pour d'autres types de fichiers uploadés
     if (msg.media_url) { 
+        // console.log('MessageItem - getMediaContent: Rendu comme FICHIER GÉNÉRIQUE pour fileType:', fileType);
+        let icon = <FiFileText style={{marginRight: '5px', flexShrink: 0}} />; // Icône par défaut
+        if (fileType.includes('word')) { /* Icône Word si vous en avez une spécifique */ }
+        else if (fileType.includes('spreadsheet') || fileType.includes('excel')) { /* Icône Excel */ }
+        // Vous pouvez ajouter plus d'icônes ici si nécessaire.
         return (
           <a href={msg.media_url} target="_blank" rel="noopener noreferrer" download={decodedFileName} className="message-media-file">
-            <FiFileText /> <span>{decodedFileName || "Fichier joint"}</span> <FiDownload />
+            {icon} <span>{decodedFileName || "Fichier joint"}</span> <FiDownload style={{marginLeft: 'auto', flexShrink: 0}}/>
           </a>
         );
     }
-
-    return null; // Si media_url est là mais aucun cas ne correspond (ne devrait pas arriver avec le fallback)
+    // console.log('MessageItem - getMediaContent: Aucun média à rendre pour media_url:', msg.media_url);
+    return null;
   };
 
   const mediaElement = getMediaContent(message);
 
   const linkifyOptions = {
-    target: '_blank',
-    rel: 'noopener noreferrer',
-    className: 'message-text-link'
+    attributes: {
+        target: '_blank',
+        rel: 'noopener noreferrer nofollow',
+    },
+    className: 'message-text-link',
   };
 
   return (
