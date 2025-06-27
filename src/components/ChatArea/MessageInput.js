@@ -5,7 +5,7 @@ import { FiSend, FiPaperclip, FiSmile, FiX, FiFileText, FiMic, FiFilm, FiSquare,
 import axios from 'axios';
 import './MessageInput.css';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_URL = process.env.REACT_APP_API_URL || 'chatgather.p6-groupeb.com/api';
 
 const MessageInput = ({ onSendMessage, activeRoomId, socket, isDirectMessageRoom }) => {
   const [messageText, setMessageText] = useState('');

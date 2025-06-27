@@ -7,7 +7,7 @@ import InputField from '../components/common/InputField';
 import Button from '../components/common/Button';
 import { FiLock } from 'react-icons/fi';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_URL = process.env.REACT_APP_API_URL || 'chatgather.p6-groupeb.com/api';
 
 const ResetPasswordPage = () => {
   const { token } = useParams(); // Récupère le token de l'URL
