@@ -7,7 +7,7 @@ import Button from '../components/common/Button';
 import { FiMail } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
-const API_URL = process.env.REACT_APP_API_URL || 'https://chatgather.p6-groupeb.com/api';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState('');
