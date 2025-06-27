@@ -4,7 +4,7 @@ import axios from 'axios'; // Importer axios
 // import { usersData } from '../data/mockData'; // Plus utilisé pour l'initialisation
 
 // L'URL de base de votre API backend
-const API_URL = process.env.REACT_APP_API_URL || 'chatgather.p6-groupeb.com/api';
+const API_URL = process.env.REACT_APP_API_URL || 'https://chatgather.p6-groupeb.com/api';
 
 export const AuthContext = createContext(null);
 

@@ -11,8 +11,8 @@ import { Navigate } from 'react-router-dom';
 import { isURL } from '../utils/url'; 
 import '../App.css';
 
-const API_URL = process.env.REACT_APP_API_URL || 'chatgather.p6-groupeb.com/api';
-const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || 'chatgather.p6-groupeb.com';
+const API_URL = process.env.REACT_APP_API_URL || 'https://chatgather.p6-groupeb.com/api';
+const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || 'https://chatgather.p6-groupeb.com';
 
 function ChatPage() {
   const { currentUser, token } = useAuth();

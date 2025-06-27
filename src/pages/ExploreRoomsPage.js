@@ -9,7 +9,7 @@ import LoadingSpinner from '../components/common/LoadingSpinner';
 import { FiSearch, FiMessageSquare, FiUsers, FiLogIn } from 'react-icons/fi';
 import './ExploreRoomsPage.css';
 
-const API_URL = process.env.REACT_APP_API_URL || 'chatgather.p6-groupeb.com/api';
+const API_URL = process.env.REACT_APP_API_URL || 'https://chatgather.p6-groupeb.com/api';
 
 const ExploreRoomsPage = () => {
   const [allRooms, setAllRooms] = useState([]);
